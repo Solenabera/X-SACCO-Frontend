@@ -23,28 +23,30 @@ const AppContent = () => {
     }, [user])
 
     return (
-        <div className="mx-4 mb-2 py-0 ">
-            <Suspense fallback={
-                <div className="pt-3 text-center">
-                    <CSpinner color="primary" variant="grow" />
-                </div>
-            }>
-                <Routes>
-                    {routes.map((route, idx) => {
-                        return (
-                            route.element && (
-                                <Route
-                                    key={idx}
-                                    path={route.path}
-                                    exact={route.exact}
-                                    name={route.name}
-                                    element={<route.element />}
-                                />
+        <div className="mx-3 mx-md-4 mb-3 py-1">
+            <div className="sacco-surface rounded-4 p-3 p-md-4">
+                <Suspense fallback={
+                    <div className="pt-3 text-center">
+                        <CSpinner color="primary" variant="grow" />
+                    </div>
+                }>
+                    <Routes>
+                        {routes.map((route, idx) => {
+                            return (
+                                route.element && (
+                                    <Route
+                                        key={idx}
+                                        path={route.path}
+                                        exact={route.exact}
+                                        name={route.name}
+                                        element={<route.element />}
+                                    />
+                                )
                             )
-                        )
-                    })}
-                </Routes>
-            </Suspense>
+                        })}
+                    </Routes>
+                </Suspense>
+            </div>
         </div>
     )
 }

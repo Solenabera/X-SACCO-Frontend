@@ -11,21 +11,21 @@ import LoginForm from './LoginForm';
 const Login = () => {
     return (
         <div
-            className="min-vh-100 d-flex align-items-center"
+            className="min-vh-100 d-flex align-items-center py-4"
             style={{
-                background: 'linear-gradient(135deg, #9ebefaff, #30679bff)'
+                background:
+                    'radial-gradient(circle at top right, rgba(17, 163, 106, 0.2), transparent 20%), linear-gradient(135deg, #0f4c81, #1f6ea8)'
             }}
         >
             <CContainer>
-                <CRow className="align-items-center">
+                <CRow className="align-items-center g-4">
+                    <CCol md={6} className="text-white px-3 px-md-5">
+                        <div className="mb-4 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-primary bg-white" style={{ width: '58px', height: '58px' }}>
+                            X
+                        </div>
+                        <h1 className="fw-bold mb-3">X-SACCO</h1>
 
-                    {/* LEFT SIDE */}
-                    <CCol md={6} className="text-white px-5">
-                        <h1 className="fw-bold mb-4">
-                            X-SACCO
-                        </h1>
-
-                        <p style={{ fontSize: '18px', opacity: 0.9 }}>
+                        <p style={{ fontSize: '18px', opacity: 0.92, maxWidth: '520px' }}>
                             A secure and modern platform to manage savings, loans,
                             and financial transactions efficiently.
                         </p>
@@ -37,23 +37,21 @@ const Login = () => {
                         </div>
                     </CCol>
 
-                    {/* RIGHT SIDE */}
-
                     <CCol xs={11} sm={8} md={5} lg={5} className="mx-auto">
                         <CCard
                             className="shadow border-0"
                             style={{
-                                borderRadius: '12px',
+                                borderRadius: '18px',
                                 backgroundColor: '#ffffff',
-                                padding: window.innerWidth < 576 ? '5px' : '10px',
-                                marginTop: window.innerWidth < 576 ? '20px' : '10px'
+                                padding: '6px',
+                                marginTop: '10px',
                             }}
-                        >             <CCardBody>
+                        >
+                            <CCardBody className="p-4 p-md-5">
                                 <LoginForm />
                             </CCardBody>
                         </CCard>
                     </CCol>
-
                 </CRow>
             </CContainer>
         </div>

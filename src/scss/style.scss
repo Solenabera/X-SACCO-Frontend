@@ -1,23 +1,38 @@
-@use "@coreui/coreui/scss/coreui" as * with ( 
+@use "@coreui/coreui/scss/coreui" as * with (
   $enable-deprecation-messages: false,
 );
 @use "@coreui/chartjs/scss/coreui-chartjs";
 @use "vendors/simplebar";
 
+:root {
+  --sacco-primary: #0f4c81;
+  --sacco-primary-soft: #dcecff;
+  --sacco-accent: #11a36a;
+  --sacco-surface: #ffffff;
+  --sacco-page-bg: #eef5fb;
+  --sacco-text: #1f2a37;
+  --sacco-muted: #6b7280;
+  --sacco-shadow: 0 12px 28px rgba(15, 76, 129, 0.12);
+}
+
 body {
-  background-color: var(--cui-tertiary-bg);
+  background:
+    radial-gradient(circle at top left, rgba(17, 163, 106, 0.08), transparent 18%),
+    linear-gradient(180deg, #f7fbff 0%, #edf4fb 100%);
+  color: var(--sacco-text);
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 
 .wrapper {
   width: 100%;
   padding-inline: var(--cui-sidebar-occupy-start, 0) var(--cui-sidebar-occupy-end, 0);
   will-change: auto;
-  @include transition(padding .15s);
+  @include transition(padding 0.15s);
 }
 
 .header > .container-fluid,
 .sidebar-header {
-  min-height: calc(4rem + 1px); // stylelint-disable-line function-disallowed-list
+  min-height: calc(4rem + 1px);
 }
 
 .sidebar-brand-full {
@@ -33,7 +48,7 @@ body {
   .nav-link {
     display: flex;
     align-items: center;
-    min-height: calc(4rem + 1px); // stylelint-disable-line function-disallowed-list
+    min-height: calc(4rem + 1px);
   }
 }
 
@@ -53,12 +68,150 @@ body {
 }
 
 .footer {
-  min-height: calc(3rem + 1px); // stylelint-disable-line function-disallowed-list
+  min-height: calc(3rem + 1px);
+}
+
+.sidebar {
+  box-shadow: 15px 0 40px rgba(15, 76, 129, 0.18) !important;
+}
+
+.sidebar .nav-group-toggle,
+.sidebar .nav-link {
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-link {
+  border-radius: 0.9rem;
+  margin: 0.18rem 0;
+  padding: 0.72rem 0.9rem;
+  color: rgba(255, 255, 255, 0.94);
+  font-weight: 600;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-group-toggle:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateX(3px);
+}
+
+.sidebar .nav-link.active {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.sidebar .nav-icon {
+  color: #dcecff;
+}
+
+.header {
+  box-shadow: 0 8px 24px rgba(15, 76, 129, 0.15) !important;
+}
+
+.header .dropdown-menu,
+.card,
+.table,
+.form-control,
+.form-select,
+.input-group-text,
+.btn {
+  border-radius: 0.9rem !important;
+}
+
+.card {
+  border: 1px solid rgba(15, 76, 129, 0.08) !important;
+  box-shadow: var(--sacco-shadow);
+  background: var(--sacco-surface);
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(15, 76, 129, 0.08) !important;
+  background: linear-gradient(135deg, var(--sacco-primary-soft), #ffffff) !important;
+}
+
+.table {
+  overflow: hidden;
+}
+
+.table thead th {
+  background: #f1f7fd;
+  color: #11406c;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.74rem;
+}
+
+.table tbody tr {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background: rgba(15, 76, 129, 0.04);
+}
+
+.hover-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.hover-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 30px rgba(15, 76, 129, 0.18);
+}
+
+.form-control,
+.form-select,
+.input-group-text {
+  border-color: rgba(15, 76, 129, 0.18);
+  box-shadow: none;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--sacco-primary);
+  box-shadow: 0 0 0 0.2rem rgba(15, 76, 129, 0.16);
+}
+
+.btn {
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--sacco-primary), #195a92) !important;
+  border: none !important;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #11a36a, #149e66) !important;
+  border: none !important;
+}
+
+.btn-outline-primary {
+  color: var(--sacco-primary);
+  border-color: var(--sacco-primary);
+}
+
+.btn-outline-primary:hover {
+  background: var(--sacco-primary);
+  color: white;
+}
+
+.sacco-surface {
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(15, 76, 129, 0.08);
+  box-shadow: var(--sacco-shadow);
 }
 
 @include color-mode(dark) {
   body {
-    background-color: var(--cui-dark-bg-subtle);
+    background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+    color: #f8fafc;
   }
 
   .footer {

@@ -9,7 +9,7 @@ import {
 } from '@coreui/react';
 
 import CIcon from '@coreui/icons-react';
-import { freeSet } from '@coreui/icons';
+import { cilLockLocked, cilLockUnlocked } from '@coreui/icons';
 
 import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -64,9 +64,8 @@ const LoginForm = () => {
 
     return (
         <CForm onSubmit={loginWithEmailAndPassword}>
-            {/* HEADER */}
             <div className="text-center mb-4">
-                <h2 className="fw-bold" style={{ color: '#1e3c72' }}>
+                <h2 className="fw-bold" style={{ color: '#0f4c81' }}>
                     Sign In
                 </h2>
                 <p style={{ fontSize: '14px', color: '#6c757d' }}>
@@ -74,10 +73,11 @@ const LoginForm = () => {
                 </p>
             </div>
 
-            <CRow className="px-2">
-                {/* EMAIL */}
+            <CRow className="px-1 px-md-2">
                 <CInputGroup className="mb-4">
-                    <CInputGroupText>@</CInputGroupText>
+                    <CInputGroupText className="bg-light text-primary" style={{ width: '48px', justifyContent: 'center' }}>
+                        @
+                    </CInputGroupText>
                     <CFormInput
                         placeholder="Email"
                         autoComplete="email"
@@ -89,12 +89,12 @@ const LoginForm = () => {
                         required
                     />
                 </CInputGroup>
-                {/* ERROR */}
                 <ErrorMessage message={emailErrorMessage} />
 
-                {/* PASSWORD */}
                 <CInputGroup className="mb-4">
-                    <CInputGroupText>*</CInputGroupText>
+                    <CInputGroupText className="bg-light text-primary" style={{ width: '48px', justifyContent: 'center' }}>
+                        *
+                    </CInputGroupText>
                     <CFormInput
                         placeholder="Password"
                         type={showPass ? 'text' : 'password'}
@@ -103,35 +103,47 @@ const LoginForm = () => {
                         required
                     />
                     <CInputGroupText
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer', width: '52px', justifyContent: 'center', padding: '0.5rem' }}
                         onClick={() => setShowPass(!showPass)}
+                        className="bg-light text-primary"
                     >
-                        {showPass ? <CIcon icon={freeSet.cilEyeSlash} /> : <CIcon icon={freeSet.cilEye} />}
+                        {showPass ? (
+                            <CIcon
+                                icon={cilLockUnlocked}
+                                size="lg"
+                                className="text-primary"
+                                style={{ width: '20px', height: '20px' }}
+                            />
+                        ) : (
+                            <CIcon
+                                icon={cilLockLocked}
+                                size="lg"
+                                className="text-primary"
+                                style={{ width: '20px', height: '20px' }}
+                            />
+                        )}
                     </CInputGroupText>
                 </CInputGroup>
 
-                {/* ERROR */}
                 {errors?.isError && (
                     <ErrorMessage message={errors?.details?.response?.data?.message ??
                         errors?.message} />
                 )}
 
-                {/* BUTTON */}
                 <div className="d-grid mt-2">
                     <CButton
                         color="primary"
                         type="submit"
                         disabled={isLoading}
-                        className="fw-bold"
+                        className="fw-bold px-4 py-2"
                     >
                         {isLoading ? <CSpinner size="sm" /> : 'Login'}
                     </CButton>
                 </div>
 
-                {/* REGISTER */}
                 <div className="text-center mt-3">
                     <Link to="/register" style={{ textDecoration: 'none' }}>
-                        <small style={{ color: '#1b033aff' }}>
+                        <small style={{ color: '#0f4c81', fontWeight: 600 }}>
                             Don’t have an account? Register
                         </small>
                     </Link>

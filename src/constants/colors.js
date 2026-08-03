@@ -1,11 +1,13 @@
 // colors.js
 const customColors = {
-    // headerBgColor: '#6b76b5',
-    headerBgColor: '#b0bbff',
-    headerBgSecondaryColor: '#d3d9ff',
-    headerTextColor: '#000000',
-    deleteBtnColor: 'FF0000',
-    editBtnColor: '0000FF',
+    headerBgColor: '#0f4c81',
+    headerBgSecondaryColor: '#dcecff',
+    headerTextColor: '#ffffff',
+    deleteBtnColor: '#dc3545',
+    editBtnColor: '#0d6efd',
+    accentColor: '#11a36a',
+    surfaceColor: '#f8fbff',
+    pageBgColor: '#eef5fb',
 };
 
 export default customColors;

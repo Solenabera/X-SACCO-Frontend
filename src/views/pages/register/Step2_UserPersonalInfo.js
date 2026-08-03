@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     CForm,
     CFormInput,
@@ -6,7 +6,11 @@ import {
     CRow,
     CCol,
     CFormSelect,
+    CInputGroup,
+    CInputGroupText,
 } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilLockLocked, cilLockUnlocked } from '@coreui/icons'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userPersonalInfoSchema } from '../../../yup/RegistrationSchema';
@@ -20,6 +24,9 @@ const Step2_UserPersonalInfo = ({ onBack, onSuccess }) => {
         resolver: yupResolver(userPersonalInfoSchema),
         mode: 'onTouched'
     });
+
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     const onSubmit = (data) => {
         onSuccess(data);
@@ -78,12 +85,52 @@ const Step2_UserPersonalInfo = ({ onBack, onSuccess }) => {
 
             <CRow>
                 <CCol md={6} className='mb-3'>
-                    <CFormInput type="password" placeholder="Password" {...register('Password')} />
+                    <CInputGroup>
+                        <CInputGroupText className="bg-light text-primary" style={{ width: '48px', justifyContent: 'center' }}>
+                            *
+                        </CInputGroupText>
+                        <CFormInput
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="Password"
+                            {...register('Password')}
+                        />
+                        <CInputGroupText
+                            style={{ cursor: 'pointer', width: '48px', justifyContent: 'center', padding: '0.5rem' }}
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="bg-light text-primary"
+                        >
+                            {showPassword ? (
+                                <CIcon icon={cilLockUnlocked} size="lg" style={{ width: '20px', height: '20px' }} />
+                            ) : (
+                                <CIcon icon={cilLockLocked} size="lg" style={{ width: '20px', height: '20px' }} />
+                            )}
+                        </CInputGroupText>
+                    </CInputGroup>
                     {errors.Password && <small className='text-danger'>{errors.Password.message}</small>}
                 </CCol>
 
                 <CCol md={6} className='mb-3'>
-                    <CFormInput type="password" placeholder="Confirm Password" {...register('ConfirmPassword')} />
+                    <CInputGroup>
+                        <CInputGroupText className="bg-light text-primary" style={{ width: '48px', justifyContent: 'center' }}>
+                            *
+                        </CInputGroupText>
+                        <CFormInput
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            placeholder="Confirm Password"
+                            {...register('ConfirmPassword')}
+                        />
+                        <CInputGroupText
+                            style={{ cursor: 'pointer', width: '48px', justifyContent: 'center', padding: '0.5rem' }}
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="bg-light text-primary"
+                        >
+                            {showConfirmPassword ? (
+                                <CIcon icon={cilLockUnlocked} size="lg" style={{ width: '20px', height: '20px' }} />
+                            ) : (
+                                <CIcon icon={cilLockLocked} size="lg" style={{ width: '20px', height: '20px' }} />
+                            )}
+                        </CInputGroupText>
+                    </CInputGroup>
                     {errors.ConfirmPassword && <small className='text-danger'>{errors.ConfirmPassword.message}</small>}
                 </CCol>
             </CRow>
