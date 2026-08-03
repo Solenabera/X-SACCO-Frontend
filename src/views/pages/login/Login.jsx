@@ -7,30 +7,34 @@ import {
     CRow
 } from '@coreui/react';
 import LoginForm from './LoginForm';
+import PublicHeader from '../../../components/public/PublicHeader';
+import PublicFooter from '../../../components/public/PublicFooter';
 
 const Login = () => {
     return (
         <div
-            className="min-vh-100 d-flex align-items-center py-4"
+            className="min-vh-100 d-flex flex-column"
             style={{
                 background:
-                    'radial-gradient(circle at top right, rgba(17, 163, 106, 0.2), transparent 20%), linear-gradient(135deg, #0f4c81, #1f6ea8)'
+                    'linear-gradient(180deg, #f5f9ff 0%, #eef5ff 48%, #ffffff 100%)'
             }}
         >
+            <PublicHeader />
+            <div className="d-flex align-items-center py-4 flex-grow-1">
             <CContainer>
                 <CRow className="align-items-center g-4">
-                    <CCol md={6} className="text-white px-3 px-md-5">
-                        <div className="mb-4 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-primary bg-white" style={{ width: '58px', height: '58px' }}>
+                    <CCol md={6} className="text-primary px-3 px-md-5">
+                        <div className="mb-4 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-white" style={{ width: '58px', height: '58px', backgroundColor:'#0f4c81' }}>
                             X
                         </div>
-                        <h1 className="fw-bold mb-3">X-SACCO</h1>
+                        <h1 className="fw-bold mb-3" style={{ color:'#0f4c81' }}>X-SACCO</h1>
 
-                        <p style={{ fontSize: '18px', opacity: 0.92, maxWidth: '520px' }}>
+                        <p style={{ fontSize: '18px', color: '#34526b', maxWidth: '520px' }}>
                             A secure and modern platform to manage savings, loans,
                             and financial transactions efficiently.
                         </p>
 
-                        <div style={{ marginTop: '25px', lineHeight: '1.8' }}>
+                        <div style={{ marginTop: '25px', lineHeight: '1.8', color:'#23435d' }}>
                             <div>✔ Secure and reliable system</div>
                             <div>✔ Easy loan and savings management</div>
                             <div>✔ Real-time financial tracking</div>
@@ -54,6 +58,8 @@ const Login = () => {
                     </CCol>
                 </CRow>
             </CContainer>
+            </div>
+            <PublicFooter />
         </div>
     );
 };

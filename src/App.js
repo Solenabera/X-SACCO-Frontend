@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense, useContext, useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -8,16 +8,24 @@ import './scss/style.scss'
 // We use those styles to show code examples, you should remove them in your application.
 import './scss/examples.scss'
 
+import { UserContext } from './providers/userProvider'
+
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
 // Pages
+const PublicLandingPage = React.lazy(() => import('./views/pages/public/PublicLandingPage'))
+const PublicSavingsPage = React.lazy(() => import('./views/pages/public/PublicSavingsPage'))
+const PublicLoansPage = React.lazy(() => import('./views/pages/public/PublicLoansPage'))
+const PublicAboutPage = React.lazy(() => import('./views/pages/public/PublicAboutPage'))
+const PublicContactPage = React.lazy(() => import('./views/pages/public/PublicContactPage'))
 const Login = React.lazy(() => import('./views/pages/login/Login'))
 const RegisterStepper = React.lazy(() => import('./views/pages/register/RegisterStepper'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
 const App = () => {
+    const { user } = useContext(UserContext)
     const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
     const storedTheme = useSelector((state) => state.theme)
 
@@ -45,6 +53,11 @@ const App = () => {
                 }
             >
                 <Routes>
+                    <Route exact path="/" name="Public Home" element={user ? <DefaultLayout /> : <PublicLandingPage />} />
+                    <Route exact path="/savings" name="Savings Page" element={<PublicSavingsPage />} />
+                    <Route exact path="/loans" name="Loans Page" element={<PublicLoansPage />} />
+                    <Route exact path="/about" name="About Us Page" element={<PublicAboutPage />} />
+                    <Route exact path="/contact" name="Contact Us Page" element={<PublicContactPage />} />
                     <Route exact path="/login" name="Login Page" element={<Login />} />
                     <Route exact path="/register/*" name="Register Page" element={<RegisterStepper />} />
                     <Route exact path="/404" name="Page 404" element={<Page404 />} />

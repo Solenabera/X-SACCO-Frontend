@@ -33,9 +33,28 @@ const LoginForm = () => {
         false
     );
 
+    const handlePhoneChange = (e) => {
+        const val = e.target.value.replace(/\D/g, '');
+
+        if (val.length > 0 && val[0] !== '9') {
+            return;
+        }
+
+        if (val.length <= 9) {
+            setEmailErrorMessage('');
+            setPhoneNumber(val);
+        }
+    };
+
     const loginWithPhoneNumberAndPassword = (e) => {
         e.preventDefault();
-        fetchData({ data: { phone_number, password } });
+
+        if (phone_number.length !== 9) {
+            setEmailErrorMessage('Phone number must be exactly 9 digits long.');
+            return;
+        }
+
+        fetchData({ data: { phone_number: `+251${phone_number}`, password } });
     };
 
     useEffect(() => {
@@ -70,18 +89,16 @@ const LoginForm = () => {
 
             <CRow className="px-1 px-md-2">
                 <CInputGroup className="mb-4">
-                    <CInputGroupText className="bg-light text-primary" style={{ width: '48px', justifyContent: 'center' }}>
-                        @
+                    <CInputGroupText className="bg-light text-primary" style={{ width: '64px', justifyContent: 'center' }}>
+                        +251
                     </CInputGroupText>
                     <CFormInput
-                        placeholder="Phone Number"
-                        // autoComplete="email"
+                        type="tel"
+                        placeholder="9XXXXXXXX"
                         value={phone_number}
-                        onChange={(e) => {
-                            setEmailErrorMessage('');
-                            setPhoneNumber(e.target.value);
-                        }}
+                        onChange={handlePhoneChange}
                         required
+                        maxLength={9}
                     />
                 </CInputGroup>
                 <ErrorMessage message={emailErrorMessage} />
