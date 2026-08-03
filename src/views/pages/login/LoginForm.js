@@ -17,30 +17,25 @@ import useApiFetch from '../../../hooks/useAPIFetch';
 import { UserContext } from '../../../providers/userProvider';
 
 import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage';
+import { set } from 'react-hook-form';
 
 const LoginForm = () => {
     const navigate = useNavigate();
     const { setUser, writeStorage, clearStorage } = useContext(UserContext);
 
-    const [email, setEmail] = useState('');
+    const [phone_number, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
     const [showPass, setShowPass] = useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = useState('');
 
     const { data, isLoading, errors, fetchData } = useApiFetch(
-        { url: 'login_user', method: 'POST' },
+        { url: 'login', method: 'POST' },
         false
     );
 
-    const loginWithEmailAndPassword = (e) => {
+    const loginWithPhoneNumberAndPassword = (e) => {
         e.preventDefault();
-
-        if (!email.includes('@')) {
-            setEmailErrorMessage('Please enter a valid email.');
-            return;
-        }
-
-        fetchData({ data: { email, password } });
+        fetchData({ data: { phone_number, password } });
     };
 
     useEffect(() => {
@@ -52,7 +47,7 @@ const LoginForm = () => {
 
     useEffect(() => {
         if (!isLoading && data) {
-            setUser(data.data);
+            setUser(data?.data?.member);
             writeStorage('user', JSON.stringify(data.data));
 
             const timeoutTimestamp = Date.now() + 30 * 60 * 1000;
@@ -63,7 +58,7 @@ const LoginForm = () => {
     }, [isLoading, data]);
 
     return (
-        <CForm onSubmit={loginWithEmailAndPassword}>
+        <CForm onSubmit={loginWithPhoneNumberAndPassword}>
             <div className="text-center mb-4">
                 <h2 className="fw-bold" style={{ color: '#0f4c81' }}>
                     Sign In
@@ -79,12 +74,12 @@ const LoginForm = () => {
                         @
                     </CInputGroupText>
                     <CFormInput
-                        placeholder="Email"
-                        autoComplete="email"
-                        value={email}
+                        placeholder="Phone Number"
+                        // autoComplete="email"
+                        value={phone_number}
                         onChange={(e) => {
                             setEmailErrorMessage('');
-                            setEmail(e.target.value);
+                            setPhoneNumber(e.target.value);
                         }}
                         required
                     />

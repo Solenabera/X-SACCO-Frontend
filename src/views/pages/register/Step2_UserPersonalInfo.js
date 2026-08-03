@@ -20,7 +20,7 @@ const Step2_UserPersonalInfo = ({ onBack, onSuccess }) => {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm({ 
+    } = useForm({
         resolver: yupResolver(userPersonalInfoSchema),
         mode: 'onTouched'
     });
@@ -53,7 +53,7 @@ const Step2_UserPersonalInfo = ({ onBack, onSuccess }) => {
                     <CFormInput placeholder="Last Name" {...register('LastName')} />
                     {errors.LastName && <small className='text-danger'>{errors.LastName.message}</small>}
                 </CCol>
-                
+
                 <CCol md={6} className='mb-3'>
                     <CFormInput placeholder="Fayda ID (FAN)" {...register('FAN')} />
                     {errors.FAN && <small className='text-danger'>{errors.FAN.message}</small>}

@@ -22,12 +22,7 @@ const AppSidebar = () => {
     const sidebarShow = useSelector((state) => state.sidebarShow)
 
     const renderSidebarNav = () => {
-        switch (user?.personalInfo?.RoleID) {
-            case 'RoleID_03':
-                return <AppSidebarNav items={_nav_Purchaser} />
-            default:
-                return null
-        }
+        return <AppSidebarNav items={_nav_Purchaser} />
     }
 
     return (
