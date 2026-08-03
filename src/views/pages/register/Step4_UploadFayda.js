@@ -57,7 +57,7 @@ const Step4_UploadFayda = ({ phoneNumber, personalInfo, userAddress, onBack, onS
     // Watch for successful API response
     useEffect(() => {
         if (data && !apiErrors?.isError && !isLoading) {
-            onSuccess(); // Trigger Step 5 (Thank You)
+            onSuccess();
         }
     }, [data, apiErrors, isLoading, onSuccess]);
 
@@ -93,7 +93,7 @@ const Step4_UploadFayda = ({ phoneNumber, personalInfo, userAddress, onBack, onS
                 </CCol>
                 <CCol xs={6}>
                     <CButton type="submit" color="primary" className="w-100" disabled={isLoading}>
-                        {isLoading ? 'Submitting...' : 'Submit Registration'}
+                        {isLoading ? 'Submitting...' : 'Submit'}
                     </CButton>
                 </CCol>
             </CRow>

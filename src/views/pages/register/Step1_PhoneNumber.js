@@ -40,7 +40,6 @@ const Step1_PhoneNumber = ({ onSuccess }) => {
             return; 
         }
 
-        // Pass the fully formatted number to the parent Stepper
         onSuccess(`+251${phoneNumber}`);
     };
 

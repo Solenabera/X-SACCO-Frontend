@@ -9,7 +9,7 @@ import {
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
-import userSchema from '../../../yup/userSchema';
+import {userAddressSchema} from '../../../yup/RegistrationSchema';
 
 const Step3_UserAddress = ({ onBack, onSuccess }) => {
     
@@ -18,7 +18,7 @@ const Step3_UserAddress = ({ onBack, onSuccess }) => {
         handleSubmit,
         formState: { errors },
     } = useForm({ 
-        resolver: yupResolver(userSchema),
+        resolver: yupResolver(userAddressSchema),
         mode: 'onTouched'
     });
 

@@ -21,7 +21,7 @@ const RegisterStepper = () => {
     return (
         <CContainer className="d-flex align-items-center justify-content-center min-vh-100 py-5">
             <CCard className="shadow-lg border-0" style={{ width: '100%', maxWidth: '600px' }}>
-                <CCardBody className="p-5">
+                <CCardBody className="p-2">
                     <div className="text-center mb-4">
                         <h3 className="fw-bold" style={{ color: '#1e3c72' }}>Register to X-SACCO</h3>
                         <p className="text-muted small">Step {step} of {numberOfSteps}</p>
@@ -30,7 +30,7 @@ const RegisterStepper = () => {
                     <CProgress
                         value={(step / numberOfSteps) * 100}
                         className="mb-4"
-                        color="primary"
+                        color="#1e3c72"
                     />
 
                     {step === 1 && (

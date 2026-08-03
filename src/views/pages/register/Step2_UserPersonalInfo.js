@@ -9,7 +9,7 @@ import {
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
-import userSchema from '../../../yup/userSchema';
+import { userPersonalInfoSchema } from '../../../yup/RegistrationSchema';
 
 const Step2_UserPersonalInfo = ({ onBack, onSuccess }) => {
     const {
@@ -17,12 +17,11 @@ const Step2_UserPersonalInfo = ({ onBack, onSuccess }) => {
         handleSubmit,
         formState: { errors },
     } = useForm({ 
-        resolver: yupResolver(userSchema),
+        resolver: yupResolver(userPersonalInfoSchema),
         mode: 'onTouched'
     });
 
     const onSubmit = (data) => {
-        console.log();
         onSuccess(data);
     };
 
