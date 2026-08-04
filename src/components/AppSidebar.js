@@ -12,7 +12,7 @@ import navigations from '../_nav'
 import { UserContext } from '../providers/userProvider'
 import customColors from '../constants/colors'
 
-const { _nav_Admin, _nav_Consultant, _nav_Supplier, _nav_Purchaser } = navigations
+const { _nav_Purchaser } = navigations
 
 const AppSidebar = () => {
     const dispatch = useDispatch()

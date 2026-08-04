@@ -38,11 +38,11 @@ const PublicHeader = () => {
                     style={
                         isActive
                             ? {
-                                  background: 'linear-gradient(135deg, #0f4c81 0%, #1b5e9d 100%)',
-                              }
+                                background: 'linear-gradient(135deg, #0f4c81 0%, #1b5e9d 100%)',
+                            }
                             : {
-                                  background: '#eff6ff',
-                              }
+                                background: '#eff6ff',
+                            }
                     }
                 >
                     {item.label}
@@ -68,7 +68,7 @@ const PublicHeader = () => {
             colorScheme="light"
             className="sticky-top border-bottom"
             style={{
-                background: 'rgba(255,255,255,0.94)',
+                background: 'rgba(204, 230, 248, 0.94)',
                 backdropFilter: 'blur(14px)',
                 boxShadow: '0 8px 30px rgba(15, 76, 129, 0.08)',
             }}

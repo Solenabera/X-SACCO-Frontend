@@ -5,6 +5,7 @@ import PublicPageTemplate from '../../../components/public/PublicPageTemplate'
 const PublicAboutPage = () => {
     return (
         <PublicPageTemplate
+            className="py-5 py-lg-6" style={{ maxWidth: '1700px' }}
             title="About Us"
             intro="X-SACCO is a member-centered financial cooperative designed to offer trusted savings, loan, and service solutions. Our mission is to help members improve financial security, participation, and sustainable growth through secure digital access."
         >

@@ -21,43 +21,43 @@ const Login = () => {
         >
             <PublicHeader />
             <div className="d-flex align-items-center py-4 flex-grow-1">
-            <CContainer>
-                <CRow className="align-items-center g-4">
-                    <CCol md={6} className="text-primary px-3 px-md-5">
-                        <div className="mb-4 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-white" style={{ width: '58px', height: '58px', backgroundColor:'#0f4c81' }}>
-                            X
-                        </div>
-                        <h1 className="fw-bold mb-3" style={{ color:'#0f4c81' }}>X-SACCO</h1>
+                <CContainer>
+                    <CRow className="align-items-center g-4">
+                        <CCol md={6} className="text-primary px-3 px-md-5">
+                            <div className="mb-4 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-white" style={{ width: '58px', height: '58px', backgroundColor: '#0f4c81' }}>
+                                X
+                            </div>
+                            <h1 className="fw-bold mb-3" style={{ color: '#0f4c81' }}>X-SACCO</h1>
 
-                        <p style={{ fontSize: '18px', color: '#34526b', maxWidth: '520px' }}>
-                            A secure and modern platform to manage savings, loans,
-                            and financial transactions efficiently.
-                        </p>
+                            <p style={{ fontSize: '18px', color: '#34526b', maxWidth: '520px' }}>
+                                A secure and modern platform to manage savings, loans,
+                                and financial transactions efficiently.
+                            </p>
 
-                        <div style={{ marginTop: '25px', lineHeight: '1.8', color:'#23435d' }}>
-                            <div>✔ Secure and reliable system</div>
-                            <div>✔ Easy loan and savings management</div>
-                            <div>✔ Real-time financial tracking</div>
-                        </div>
-                    </CCol>
+                            <div style={{ marginTop: '25px', lineHeight: '1.8', color: '#23435d' }}>
+                                <div>✔ Secure and reliable system</div>
+                                <div>✔ Easy loan and savings management</div>
+                                <div>✔ Real-time financial tracking</div>
+                            </div>
+                        </CCol>
 
-                    <CCol xs={11} sm={8} md={5} lg={5} className="mx-auto">
-                        <CCard
-                            className="shadow border-0"
-                            style={{
-                                borderRadius: '18px',
-                                backgroundColor: '#ffffff',
-                                padding: '6px',
-                                marginTop: '10px',
-                            }}
-                        >
-                            <CCardBody className="p-4 p-md-5">
-                                <LoginForm />
-                            </CCardBody>
-                        </CCard>
-                    </CCol>
-                </CRow>
-            </CContainer>
+                        <CCol xs={12} sm={10} md={6} lg={6} className="mx-auto">
+                            <CCard
+                                className="shadow border-0"
+                                style={{
+                                    borderRadius: '18px',
+                                    backgroundColor: '#ffffff',
+                                    padding: '2px',
+                                    marginTop: '5px',
+                                }}
+                            >
+                                <CCardBody className="p-4 p-md-5">
+                                    <LoginForm />
+                                </CCardBody>
+                            </CCard>
+                        </CCol>
+                    </CRow>
+                </CContainer>
             </div>
             <PublicFooter />
         </div>

@@ -11,9 +11,11 @@ const savingsBenefits = [
 const PublicSavingsPage = () => {
     return (
         <PublicPageTemplate
+            className="py-5 py-lg-6" style={{ maxWidth: '1700px' }}
             title="Savings"
             intro="Savings are the foundation of financial stability. Through disciplined contributions and secure member services, members can build a dependable reserve while preparing for both short-term and long-term goals."
         >
+
             <CRow className="g-4">
                 <CCol lg={7}>
                     <div className="rounded-4 p-4 border h-100" style={{ background: '#f7fbff', borderColor: '#dcecff' }}>

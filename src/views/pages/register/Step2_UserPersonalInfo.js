@@ -15,14 +15,15 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userPersonalInfoSchema } from '../../../yup/RegistrationSchema';
 
-const Step2_UserPersonalInfo = ({ onBack, onSuccess }) => {
+const Step2_UserPersonalInfo = ({ personalInfo = {}, onBack, onSuccess }) => {
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(userPersonalInfoSchema),
-        mode: 'onTouched'
+        mode: 'onTouched',
+        defaultValues: personalInfo,
     });
 
     const [showPassword, setShowPassword] = useState(false)

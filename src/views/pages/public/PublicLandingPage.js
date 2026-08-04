@@ -55,7 +55,8 @@ const PublicLandingPage = () => {
             <PublicHeader />
 
             <main id="home">
-                <CContainer className="py-5 py-lg-6">
+                <CContainer className="py-5 py-lg-6" style={{ maxWidth: '1700px' }}>
+
                     <CRow className="align-items-center g-4 g-lg-5">
                         <CCol lg={6} className="pe-lg-4">
                             <div className="mb-3 d-inline-flex align-items-center rounded-pill px-3 py-2 fw-semibold" style={{ color: customColors.headerBgColor, backgroundColor: '#dcecff' }}>
@@ -157,7 +158,7 @@ const PublicLandingPage = () => {
                     </CRow>
                 </CContainer>
 
-                <CContainer className="py-5">
+                <CContainer className="py-5" style={{ maxWidth: '1700px' }}>
                     <CRow className="g-4 mb-4">
                         {featureCards.map((card) => (
                             <CCol lg={4} key={card.title}>

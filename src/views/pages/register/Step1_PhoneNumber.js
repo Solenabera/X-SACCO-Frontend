@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
     CForm,
@@ -11,9 +11,17 @@ import {
     CInputGroupText
 } from '@coreui/react';
 
-const Step1_PhoneNumber = ({ onSuccess }) => {
-    const [phoneNumber, setPhoneNumber] = useState('');
+const Step1_PhoneNumber = ({ phoneNumber: persistedPhoneNumber = '', onPhoneChange, onSuccess }) => {
+    const normalizedPhoneNumber = persistedPhoneNumber?.startsWith('+251')
+        ? persistedPhoneNumber.replace('+251', '')
+        : persistedPhoneNumber;
+
+    const [phoneNumber, setPhoneNumber] = useState(normalizedPhoneNumber);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        setPhoneNumber(normalizedPhoneNumber);
+    }, [normalizedPhoneNumber]);
 
     const handleChange = (e) => {
         // Strip out any non-numeric characters automatically
@@ -27,6 +35,7 @@ const Step1_PhoneNumber = ({ onSuccess }) => {
         // Stop accepting input after 9 digits
         if (val.length <= 9) {
             setPhoneNumber(val);
+            onPhoneChange?.(`+251${val}`);
             setError('');
         }
     };

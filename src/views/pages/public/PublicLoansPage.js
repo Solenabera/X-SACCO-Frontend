@@ -12,6 +12,7 @@ const loanSteps = [
 const PublicLoansPage = () => {
     return (
         <PublicPageTemplate
+            className="py-5 py-lg-6" style={{ maxWidth: '1700px' }}
             title="Loans"
             intro="Loans help members meet important personal and business goals with flexible support and transparent processes. The system guides members through request submission, eligibility review, and repayment management."
         >

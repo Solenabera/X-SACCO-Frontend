@@ -9,17 +9,18 @@ import {
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
-import {userAddressSchema} from '../../../yup/RegistrationSchema';
+import { userAddressSchema } from '../../../yup/RegistrationSchema';
 
-const Step3_UserAddress = ({ onBack, onSuccess }) => {
-    
+const Step3_UserAddress = ({ userAddress = {}, onBack, onSuccess }) => {
+
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm({ 
+    } = useForm({
         resolver: yupResolver(userAddressSchema),
-        mode: 'onTouched'
+        mode: 'onTouched',
+        defaultValues: userAddress,
     });
 
     const onSubmit = (data) => {
@@ -31,8 +32,8 @@ const Step3_UserAddress = ({ onBack, onSuccess }) => {
             <h5 className="mb-4 text-center">Address Information</h5>
 
             <CCol className='mb-4'>
-                <CFormSelect {...register('Region')} aria-label="Select Region">
-                    <option value="">-- Select Region --</option>
+                <CFormSelect defaultValue="Addis Ababa" {...register('Region')} aria-label="Select Region">
+                    <option value="" disabled>-- Select Region --</option>
                     <option value="Addis Ababa">Addis Ababa</option>
                     <option value="Oromia">Oromia</option>
                 </CFormSelect>

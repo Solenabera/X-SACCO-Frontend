@@ -1,26 +1,16 @@
-import React, { Suspense, useContext, useEffect, useState } from 'react'
+import React, { Suspense, useContext } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { CSpinner } from '@coreui/react'
 
 // routes config
 import { UserContext } from '../providers/userProvider'
-import purchaserRoutes from '../routes/purchaserRoutes'
+import membersRoutes from '../routes/membersRoutes'
 
 const AppContent = () => {
     const { user } = useContext(UserContext);
-    const [routes, setRoutes] = useState([])
+    const routes = membersRoutes;
 
     if (!user) { return <Navigate to='/login' replace /> }
-
-    useEffect(() => {
-        switch (user?.personalInfo?.RoleID) {
-            case 'RoleID_03':
-                setRoutes(purchaserRoutes)
-                break;
-            default:
-                break;
-        }
-    }, [user])
 
     return (
         <div className="mx-3 mx-md-4 mb-3 py-1">

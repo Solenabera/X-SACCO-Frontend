@@ -23,39 +23,27 @@ const _nav_Purchaser = [
     },
     {
         component: CNavItem,
+        name: 'Shares',
+        to: '/my-shares',
+        icon: <CIcon icon={cilChartPie} className="nav-icon" />,
+    },
+    {
+        component: CNavItem,
         name: 'Savings',
-        to: '/savings',
+        to: '/my-savings',
         icon: <CIcon icon={cilWallet} className="nav-icon" />,
     },
     {
         component: CNavItem,
         name: 'Loans',
-        to: '/loans',
+        to: '/my-loans',
         icon: <CIcon icon={cilMoney} className="nav-icon" />,
     },
     {
         component: CNavItem,
-        name: 'Shares',
-        to: '/shares',
-        icon: <CIcon icon={cilChartPie} className="nav-icon" />,
-    },
-    {
-        component: CNavItem,
         name: 'Transactions',
-        to: '/transactions',
+        to: '/my-transactions',
         icon: <CIcon icon={cilSwapHorizontal} className="nav-icon" />,
-    },
-    {
-        component: CNavItem,
-        name: 'Contributions',
-        to: '/contributions',
-        icon: <CIcon icon={cilNotes} className="nav-icon" />,
-    },
-    {
-        component: CNavItem,
-        name: 'Statements',
-        to: '/statements',
-        icon: <CIcon icon={cilDescription} className="nav-icon" />,
     },
     {
         component: CNavGroup,

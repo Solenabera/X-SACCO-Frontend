@@ -15,7 +15,7 @@ const Step4_UploadFayda = ({ phoneNumber, personalInfo, userAddress, onBack, onS
 
     // Setup the API Fetch hook for the final submission
     const { data, isLoading, errors: apiErrors, fetchData } = useApiFetch(
-        { url: 'register_user', method: 'POST', isFormData: true }, 
+        { url: 'signup', method: 'POST', isFormData: true }, 
         false
     );
 
@@ -32,27 +32,63 @@ const Step4_UploadFayda = ({ phoneNumber, personalInfo, userAddress, onBack, onS
             return;
         }
 
-        // Construct the final payload combining all stepper data
+        // Construct the final payload explicitly mapping Frontend State to Backend Schema
         const formData = new FormData();
         
-        formData.append('phoneNumber', phoneNumber);
+        // 1. Phone Number Mapping
+        formData.append('phone_number', phoneNumber); 
         
-        // Append all personal info keys
-        Object.keys(personalInfo).forEach(key => {
-            formData.append(key, personalInfo[key]);
-        });
+        // 2. Personal Info Mapping
+        formData.append('first_name', personalInfo.FirstName);
+        formData.append('middle_name', personalInfo.MiddleName);
+        formData.append('last_name', personalInfo.LastName);
+        formData.append('national_id', personalInfo.FAN); // Matches 'national_id' in schema
+        formData.append('email', personalInfo.Email);
+        formData.append('birth_date', personalInfo.BirthDate);
+        formData.append('gender', personalInfo.Gender);
+        formData.append('password', personalInfo.Password);
         
-        // Append all address info keys
-        Object.keys(userAddress).forEach(key => {
-            formData.append(key, userAddress[key]);
-        });
+        // 3. Address Mapping
+        formData.append('region', userAddress.Region);
+        formData.append('zone', userAddress.Zone);
+        formData.append('wereda', userAddress.Wereda); 
 
-        // Append the physical file
-        formData.append('faydaDocument', file);
+        // 4. File Mapping (Make sure your backend upload.array() uses this exact name)
+        formData.append('national_id_images', file);
 
         // Execute API Call
         fetchData({ data: formData });
     };
+    
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+        
+    //     if (!file) {
+    //         setValidationError('Please upload your Fayda ID document.');
+    //         return;
+    //     }
+
+    //     // Construct the final payload combining all stepper data
+    //     const formData = new FormData();
+        
+    //     formData.append('phoneNumber', phoneNumber);
+        
+    //     // Append all personal info keys
+    //     Object.keys(personalInfo).forEach(key => {
+    //         formData.append(key, personalInfo[key]);
+    //     });
+        
+    //     // Append all address info keys
+    //     Object.keys(userAddress).forEach(key => {
+    //         formData.append(key, userAddress[key]);
+    //     });
+
+    //     // Append the physical file
+    //     formData.append('national_id_images', file);
+
+    //     // Execute API Call
+    //     fetchData({ data: formData });
+    // };
 
     // Watch for successful API response
     useEffect(() => {
