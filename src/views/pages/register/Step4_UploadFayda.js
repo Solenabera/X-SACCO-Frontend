@@ -13,9 +13,8 @@ const Step4_UploadFayda = ({ phoneNumber, personalInfo, userAddress, onBack, onS
     const [file, setFile] = useState(null);
     const [validationError, setValidationError] = useState('');
 
-    // Setup the API Fetch hook for the final submission
     const { data, isLoading, errors: apiErrors, fetchData } = useApiFetch(
-        { url: 'signup', method: 'POST', isFormData: true }, 
+        { url: 'signup', method: 'POST', isFormData: true },
         false
     );
 
@@ -26,69 +25,38 @@ const Step4_UploadFayda = ({ phoneNumber, personalInfo, userAddress, onBack, onS
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!file) {
             setValidationError('Please upload your Fayda ID document.');
             return;
         }
 
-        // Construct the final payload explicitly mapping Frontend State to Backend Schema
         const formData = new FormData();
-        
+
         // 1. Phone Number Mapping
-        formData.append('phone_number', phoneNumber); 
-        
+        formData.append('phoneNumber', phoneNumber);
+
         // 2. Personal Info Mapping
-        formData.append('first_name', personalInfo.FirstName);
-        formData.append('middle_name', personalInfo.MiddleName);
-        formData.append('last_name', personalInfo.LastName);
-        formData.append('national_id', personalInfo.FAN); // Matches 'national_id' in schema
-        formData.append('email', personalInfo.Email);
-        formData.append('birth_date', personalInfo.BirthDate);
-        formData.append('gender', personalInfo.Gender);
-        formData.append('password', personalInfo.Password);
-        
+        formData.append('firstName', personalInfo.firstName);
+        formData.append('middleName', personalInfo.middleName);
+        formData.append('lastName', personalInfo.lastName);
+        formData.append('nationalId', personalInfo.nationalId); // Matches 'national_id' in schema
+        formData.append('email', personalInfo.email);
+        formData.append('birthDate', personalInfo.birthDate);
+        formData.append('gender', personalInfo.gender);
+        formData.append('password', personalInfo.password);
+
         // 3. Address Mapping
-        formData.append('region', userAddress.Region);
-        formData.append('zone', userAddress.Zone);
-        formData.append('wereda', userAddress.Wereda); 
+        formData.append('region', userAddress.region);
+        formData.append('zone', userAddress.zone);
+        formData.append('wereda', userAddress.Wereda);
 
         // 4. File Mapping (Make sure your backend upload.array() uses this exact name)
-        formData.append('national_id_images', file);
+        formData.append('nationalIdImages', file);
 
         // Execute API Call
         fetchData({ data: formData });
     };
-    
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-        
-    //     if (!file) {
-    //         setValidationError('Please upload your Fayda ID document.');
-    //         return;
-    //     }
-
-    //     // Construct the final payload combining all stepper data
-    //     const formData = new FormData();
-        
-    //     formData.append('phoneNumber', phoneNumber);
-        
-    //     // Append all personal info keys
-    //     Object.keys(personalInfo).forEach(key => {
-    //         formData.append(key, personalInfo[key]);
-    //     });
-        
-    //     // Append all address info keys
-    //     Object.keys(userAddress).forEach(key => {
-    //         formData.append(key, userAddress[key]);
-    //     });
-
-    //     // Append the physical file
-    //     formData.append('national_id_images', file);
-
-    //     // Execute API Call
-    //     fetchData({ data: formData });
-    // };
 
     // Watch for successful API response
     useEffect(() => {
@@ -114,7 +82,7 @@ const Step4_UploadFayda = ({ phoneNumber, personalInfo, userAddress, onBack, onS
             </CCol>
 
             {validationError && <CAlert color="danger">{validationError}</CAlert>}
-            
+
             {apiErrors?.isError && (
                 <CAlert color="danger">
                     {apiErrors?.details?.response?.data?.message ?? apiErrors?.message ?? 'An error occurred during registration.'}

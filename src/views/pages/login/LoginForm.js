@@ -23,7 +23,7 @@ const LoginForm = () => {
     const navigate = useNavigate();
     const { setUser, writeStorage, clearStorage } = useContext(UserContext);
 
-    const [phone_number, setPhoneNumber] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
     const [showPass, setShowPass] = useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = useState('');
@@ -49,12 +49,12 @@ const LoginForm = () => {
     const loginWithPhoneNumberAndPassword = (e) => {
         e.preventDefault();
 
-        if (phone_number.length !== 9) {
+        if (phoneNumber.length !== 9) {
             setEmailErrorMessage('Phone number must be exactly 9 digits long.');
             return;
         }
 
-        fetchData({ data: { phone_number: `+251${phone_number}`, password } });
+        fetchData({ data: { phoneNumber: `+251${phoneNumber}`, password } });
     };
 
     useEffect(() => {
@@ -66,8 +66,9 @@ const LoginForm = () => {
 
     useEffect(() => {
         if (!isLoading && data) {
-            setUser(data?.data?.member);
-            writeStorage('user', JSON.stringify(data.data));
+            const memberObj = data?.data?.member || data?.data?.user || data?.data;
+            setUser(memberObj);
+            writeStorage('user', memberObj);
 
             const timeoutTimestamp = Date.now() + 30 * 60 * 1000;
             writeStorage(SESSION_TIMEOUT_KEY, timeoutTimestamp.toString());
@@ -95,7 +96,7 @@ const LoginForm = () => {
                     <CFormInput
                         type="tel"
                         placeholder="9XXXXXXXX"
-                        value={phone_number}
+                        value={phoneNumber}
                         onChange={handlePhoneChange}
                         required
                         maxLength={9}

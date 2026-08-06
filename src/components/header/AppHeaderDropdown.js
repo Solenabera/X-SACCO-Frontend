@@ -25,7 +25,6 @@ const AppHeaderDropdown = () => {
     const navigate = useNavigate();
     const { user, setUser, getStorage, clearStorage } = useContext(UserContext);
 
-    console.log(user)
     const [isSessionExpired, setSessionExpired] = useState(false);
     const SESSION_TIMEOUT_KEY = "sessionTimeoutTimestamp";
 
@@ -92,9 +91,8 @@ const AppHeaderDropdown = () => {
             </CDropdownToggle>
             <CDropdownMenu className="pt-0" placement="bottom-end">
                 <CDropdownHeader className="bg-body-secondary fw-bold mb-2">
-                    {user?.full_name}
-                    {/* {`${user?.personalInfo?.FirstName} ${user?.personalInfo?.MiddleName} ${user?.personalInfo?.LastName}`} */}
-                    <div className="bg-body-secondary fw-semibold mb-0">{user?.email}</div>
+                    {user?.fullName || (user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : 'Member')}
+                    <div className="bg-body-secondary fw-semibold mb-0">{user?.email || user?.phoneNumber || ''}</div>
                 </CDropdownHeader>
                 <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">Account</CDropdownHeader>
                 <CDropdownItem href="#">

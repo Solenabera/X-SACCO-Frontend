@@ -39,48 +39,48 @@ const Step2_UserPersonalInfo = ({ personalInfo = {}, onBack, onSuccess }) => {
 
             <CRow>
                 <CCol md={6} className='mb-3'>
-                    <CFormInput placeholder="First Name" {...register('FirstName')} autoFocus />
-                    {errors.FirstName && <small className='text-danger'>{errors.FirstName.message}</small>}
+                    <CFormInput placeholder="First Name" {...register('firstName')} autoFocus />
+                    {errors.firstName && <small className='text-danger'>{errors.firstName.message}</small>}
                 </CCol>
 
                 <CCol md={6} className='mb-3'>
-                    <CFormInput placeholder="Middle Name" {...register('MiddleName')} />
-                    {errors.MiddleName && <small className='text-danger'>{errors.MiddleName.message}</small>}
+                    <CFormInput placeholder="Middle Name" {...register('middleName')} />
+                    {errors.middleName && <small className='text-danger'>{errors.middleName.message}</small>}
                 </CCol>
             </CRow>
 
             <CRow>
                 <CCol md={6} className='mb-3'>
-                    <CFormInput placeholder="Last Name" {...register('LastName')} />
-                    {errors.LastName && <small className='text-danger'>{errors.LastName.message}</small>}
+                    <CFormInput placeholder="Last Name" {...register('lastName')} />
+                    {errors.lastName && <small className='text-danger'>{errors.lastName.message}</small>}
                 </CCol>
 
                 <CCol md={6} className='mb-3'>
-                    <CFormInput placeholder="Fayda ID (FAN)" {...register('FAN')} />
-                    {errors.FAN && <small className='text-danger'>{errors.FAN.message}</small>}
+                    <CFormInput placeholder="Fayda ID (FAN)" {...register('nationalId')} />
+                    {errors.nationalId && <small className='text-danger'>{errors.nationalId.message}</small>}
                 </CCol>
             </CRow>
 
             <CRow>
                 <CCol md={12} className='mb-3'>
-                    <CFormInput type="email" placeholder="Email Address" {...register('Email')} />
-                    {errors.Email && <small className='text-danger'>{errors.Email.message}</small>}
+                    <CFormInput type="email" placeholder="Email Address" {...register('email')} />
+                    {errors.email && <small className='text-danger'>{errors.email.message}</small>}
                 </CCol>
             </CRow>
 
             <CRow>
                 <CCol md={6} className='mb-3'>
-                    <CFormInput type="date" placeholder="Birth Date" {...register('BirthDate')} />
-                    {errors.BirthDate && <small className='text-danger'>{errors.BirthDate.message}</small>}
+                    <CFormInput type="date" placeholder="Birth Date" {...register('birthDate')} />
+                    {errors.birthDate && <small className='text-danger'>{errors.birthDate.message}</small>}
                 </CCol>
 
                 <CCol md={6} className='mb-3'>
-                    <CFormSelect {...register('Gender')}>
+                    <CFormSelect {...register('gender')}>
                         <option value="">-- Select Gender --</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                     </CFormSelect>
-                    {errors.Gender && <small className='text-danger'>{errors.Gender.message}</small>}
+                    {errors.gender && <small className='text-danger'>{errors.gender.message}</small>}
                 </CCol>
             </CRow>
 
@@ -93,7 +93,7 @@ const Step2_UserPersonalInfo = ({ personalInfo = {}, onBack, onSuccess }) => {
                         <CFormInput
                             type={showPassword ? 'text' : 'password'}
                             placeholder="Password"
-                            {...register('Password')}
+                            {...register('password')}
                         />
                         <CInputGroupText
                             style={{ cursor: 'pointer', width: '48px', justifyContent: 'center', padding: '0.5rem' }}
@@ -107,7 +107,7 @@ const Step2_UserPersonalInfo = ({ personalInfo = {}, onBack, onSuccess }) => {
                             )}
                         </CInputGroupText>
                     </CInputGroup>
-                    {errors.Password && <small className='text-danger'>{errors.Password.message}</small>}
+                    {errors.password && <small className='text-danger'>{errors.password.message}</small>}
                 </CCol>
 
                 <CCol md={6} className='mb-3'>
@@ -118,7 +118,7 @@ const Step2_UserPersonalInfo = ({ personalInfo = {}, onBack, onSuccess }) => {
                         <CFormInput
                             type={showConfirmPassword ? 'text' : 'password'}
                             placeholder="Confirm Password"
-                            {...register('ConfirmPassword')}
+                            {...register('confirmPassword')}
                         />
                         <CInputGroupText
                             style={{ cursor: 'pointer', width: '48px', justifyContent: 'center', padding: '0.5rem' }}
@@ -132,7 +132,7 @@ const Step2_UserPersonalInfo = ({ personalInfo = {}, onBack, onSuccess }) => {
                             )}
                         </CInputGroupText>
                     </CInputGroup>
-                    {errors.ConfirmPassword && <small className='text-danger'>{errors.ConfirmPassword.message}</small>}
+                    {errors.confirmPassword && <small className='text-danger'>{errors.confirmPassword.message}</small>}
                 </CCol>
             </CRow>
 

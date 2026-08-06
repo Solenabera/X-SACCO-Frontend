@@ -6,13 +6,22 @@ const UserProvider = ({ children }) => {
     const [user, setUser] = useState();
 
     const writeStorage = (key, data) => {
-        sessionStorage.setItem(key, JSON.stringify(data))
+        if (data === undefined || data === null) {
+            sessionStorage.removeItem(key)
+            return
+        }
+        const valueToStore = typeof data === 'string' ? data : JSON.stringify(data)
+        sessionStorage.setItem(key, valueToStore)
     }
 
     const getStorage = (key) => {
         const data = sessionStorage.getItem(key)
-        if (data) return JSON.parse(data)
-        return null
+        if (!data) return null
+        try {
+            return JSON.parse(data)
+        } catch (e) {
+            return data
+        }
     }
 
     const clearStorage = () => {
@@ -22,7 +31,8 @@ const UserProvider = ({ children }) => {
     useEffect(() => {
         const storedUser = getStorage('user')
         if (storedUser) {
-            setUser(JSON.parse(storedUser))
+            const userData = storedUser?.member || storedUser?.user || storedUser
+            setUser(userData)
         }
     }, [])
 

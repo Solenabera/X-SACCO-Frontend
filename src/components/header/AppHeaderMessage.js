@@ -19,7 +19,7 @@ const AppHeaderMessage = () => {
 
     return (
         <CDropdown variant="nav-item">
-            <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
+            <CDropdownToggle placement="bottom-end" className="py-0 pe-0 text-primary" caret={false}>
                 <CIcon icon={cilEnvelopeOpen} size="lg" />
             </CDropdownToggle>
             <CDropdownMenu className="pt-0" placement="bottom-end">

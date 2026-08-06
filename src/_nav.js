@@ -6,11 +6,10 @@ import {
     cilMoney,
     cilChartPie,
     cilSwapHorizontal,
-    cilNotes,
-    cilDescription,
+    cilSend,
+    cilCreditCard,
+    cilPeople,
     cilBriefcase,
-    cilPlus,
-    cilPencil,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
 
@@ -20,6 +19,12 @@ const _nav_Purchaser = [
         name: 'Dashboard',
         to: '/',
         icon: <CIcon icon={cilSpeedometer} className="nav-icon" />,
+    },
+    {
+        component: CNavItem,
+        name: 'Make Payment',
+        to: '/my-payments',
+        icon: <CIcon icon={cilCreditCard} className="nav-icon" />,
     },
     {
         component: CNavItem,
@@ -41,29 +46,47 @@ const _nav_Purchaser = [
     },
     {
         component: CNavItem,
-        name: 'Transactions',
+        name: 'My Transactions',
         to: '/my-transactions',
         icon: <CIcon icon={cilSwapHorizontal} className="nav-icon" />,
     },
     {
         component: CNavGroup,
-        name: 'Procurement',
-        to: '/procurement',
-        icon: <CIcon icon={cilBriefcase} className="nav-icon" />,
+        name: 'Transfer',
+        to: '/transfer',
+        icon: <CIcon icon={cilSend} className="nav-icon" />,
         items: [
             {
                 component: CNavItem,
-                name: 'Initiate Procurement',
-                to: '/procurement/initiate',
-                icon: <CIcon icon={cilPlus} className="nav-icon mx-1" />,
+                name: 'Transfer Share',
+                to: '/transfer/share',
+                icon: <CIcon icon={cilChartPie} className="nav-icon mx-1" />,
             },
             {
                 component: CNavItem,
-                name: 'Draft',
-                to: '/procurement/draft',
-                icon: <CIcon icon={cilPencil} className="nav-icon mx-1" />,
+                name: 'Transfer Savings',
+                to: '/transfer/savings',
+                icon: <CIcon icon={cilWallet} className="nav-icon mx-1" />,
+            },
+            {
+                component: CNavItem,
+                name: 'Transfer Loan',
+                to: '/transfer/loan',
+                icon: <CIcon icon={cilMoney} className="nav-icon mx-1" />,
             },
         ],
+    },
+    {
+        component: CNavItem,
+        name: 'Invitations',
+        to: '/invitations',
+        icon: <CIcon icon={cilPeople} className="nav-icon" />,
+    },
+    {
+        component: CNavItem,
+        name: 'Become an Agent',
+        to: '/become-an-agent',
+        icon: <CIcon icon={cilBriefcase} className="nav-icon" />,
     },
 ]
 

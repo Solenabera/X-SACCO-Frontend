@@ -22,7 +22,6 @@ const useApiFetch = (
     const token = user?.token ?? "Permitted"
 
     const fetchData = useCallback(async (request) => {
-        console.log('useApiFetch: fetchData called with request:', request);
         setIsLoading(true);
         setData(null);
         setErrors({});

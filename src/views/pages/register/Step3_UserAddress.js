@@ -32,22 +32,22 @@ const Step3_UserAddress = ({ userAddress = {}, onBack, onSuccess }) => {
             <h5 className="mb-4 text-center">Address Information</h5>
 
             <CCol className='mb-4'>
-                <CFormSelect defaultValue="Addis Ababa" {...register('Region')} aria-label="Select Region">
+                <CFormSelect defaultValue="Addis Ababa" {...register('region')} aria-label="Select Region">
                     <option value="" disabled>-- Select Region --</option>
                     <option value="Addis Ababa">Addis Ababa</option>
                     <option value="Oromia">Oromia</option>
                 </CFormSelect>
-                {errors.Region && <small className='text-danger'>{errors.Region.message}</small>}
+                {errors.region && <small className='text-danger'>{errors.region.message}</small>}
             </CCol>
 
             <CCol className='mb-4'>
-                <CFormInput placeholder="Zone" {...register('Zone')} autoFocus />
-                {errors.Zone && <small className='text-danger'>{errors.Zone.message}</small>}
+                <CFormInput placeholder="Zone" {...register('zone')} autoFocus />
+                {errors.zone && <small className='text-danger'>{errors.zone.message}</small>}
             </CCol>
 
             <CCol className='mb-4'>
-                <CFormInput placeholder="Wereda" {...register('Wereda')} />
-                {errors.Wereda && <small className='text-danger'>{errors.Wereda.message}</small>}
+                <CFormInput placeholder="Wereda" {...register('wereda')} />
+                {errors.wereda && <small className='text-danger'>{errors.wereda.message}</small>}
             </CCol>
 
             <CRow className="mt-4">

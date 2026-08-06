@@ -42,37 +42,39 @@ const AppHeader = () => {
             className="mb-3 p-0 border-0"
             ref={headerRef}
             style={{
-                color: customColors.headerTextColor,
-                background: 'linear-gradient(135deg, #0f4c81 0%, #1b5e9d 100%)',
+                background: customColors.navGlassBg,
+                backdropFilter: 'blur(14px)',
+                boxShadow: customColors.navShadow,
+                borderBottom: `1px solid ${customColors.navBorderColor}`,
                 position: 'relative',
                 zIndex: 1030,
             }}
         >
-            <CContainer className="border-bottom border-white border-opacity-10 px-4" fluid>
+            <CContainer className="px-3 px-lg-4" fluid>
                 <CHeaderToggler
-                    className="ps-1 text-white"
+                    className="ps-1 text-primary"
                     onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}
                 >
                     <CIcon icon={cilMenu} size="lg" />
                 </CHeaderToggler>
 
-                <div className="d-none d-md-flex align-items-center text-white fw-semibold ms-2">
+                <div className="d-none d-md-flex align-items-center fw-bold ms-2" style={{ color: customColors.headerBgColor }}>
                     X-SACCO Smart Finance
                 </div>
 
                 <CHeaderNav className="ms-auto">
                     <AppHeaderNotification />
                     <li className="nav-item py-1">
-                        <div className="vr h-100 mx-2 text-white opacity-75"></div>
+                        <div className="vr h-100 mx-2 text-primary opacity-25"></div>
                     </li>
                     <AppHeaderMessage />
                 </CHeaderNav>
                 <CHeaderNav>
-                    <li className="nav-item py-1">
-                        <div className="vr h-100 mx-2 text-white opacity-75"></div>
-                    </li>
-                    <CDropdown variant="nav-item" placement="bottom-end">
-                        <CDropdownToggle caret={false} className="text-white">
+                    {/* <li className="nav-item py-1">
+                        <div className="vr h-100 mx-2 text-primary opacity-25"></div>
+                    </li> */}
+                    {/* <CDropdown variant="nav-item" placement="bottom-end">
+                        <CDropdownToggle caret={false} className="text-primary">
                             {colorMode === 'dark' ? (
                                 <CIcon icon={cilMoon} size="lg" />
                             ) : colorMode === 'auto' ? (
@@ -110,9 +112,9 @@ const AppHeader = () => {
                                 <CIcon className="me-2" icon={cilContrast} size="lg" /> Auto
                             </CDropdownItem>
                         </CDropdownMenu>
-                    </CDropdown>
+                    </CDropdown> */}
                     <li className="nav-item py-1">
-                        <div className="vr h-100 mx-2 text-white opacity-75"></div>
+                        <div className="vr h-100 mx-2 text-primary opacity-25"></div>
                     </li>
                     <AppHeaderDropdown />
                 </CHeaderNav>

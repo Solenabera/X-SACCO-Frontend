@@ -32,28 +32,33 @@ const AppSidebar = () => {
             visible={sidebarShow}
             onVisibleChange={(visible) => dispatch({ type: 'set', sidebarShow: visible })}
             style={{
-                background: 'linear-gradient(180deg, #0b2742 0%, #143f66 100%)',
-                color: customColors.headerTextColor,
-                borderRight: '1px solid rgba(255,255,255,0.12)',
+                background: customColors.navGlassBgSidebar,
+                backdropFilter: 'blur(14px)',
+                borderRight: `1px solid ${customColors.navBorderColor}`,
+                boxShadow: customColors.navShadowSidebar,
             }}
         >
             <CSidebarHeader
                 className="d-flex justify-content-between align-items-center px-3 py-3"
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}
+                style={{ borderBottom: `1px solid ${customColors.navBorderColor}` }}
             >
                 <CSidebarBrand
                     to="/"
                     className="d-flex align-items-center gap-2"
                     style={{
-                        color: customColors.headerTextColor,
+                        color: customColors.headerBgColor,
                         textDecoration: 'none',
                         fontWeight: '700',
                         letterSpacing: '0.02em',
                     }}
                 >
                     <span
-                        className="d-inline-flex align-items-center justify-content-center rounded-circle text-primary fw-bold"
-                        style={{ background: '#ffffff', width: '34px', height: '34px' }}
+                        className="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-bold"
+                        style={{
+                            background: customColors.brandLogoGradient,
+                            width: '34px',
+                            height: '34px',
+                        }}
                     >
                         X
                     </span>

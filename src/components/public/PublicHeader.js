@@ -9,6 +9,8 @@ import {
     CNavbarToggler,
 } from '@coreui/react'
 
+import customColors from '../../constants/colors'
+
 const publicNavItems = [
     { label: 'Home', href: '/', type: 'route' },
     { label: 'Savings', href: '/savings', type: 'route' },
@@ -38,10 +40,10 @@ const PublicHeader = () => {
                     style={
                         isActive
                             ? {
-                                background: 'linear-gradient(135deg, #0f4c81 0%, #1b5e9d 100%)',
+                                background: customColors.activeNavBg,
                             }
                             : {
-                                background: '#eff6ff',
+                                background: customColors.inactiveNavBg,
                             }
                     }
                 >
@@ -68,9 +70,9 @@ const PublicHeader = () => {
             colorScheme="light"
             className="sticky-top border-bottom"
             style={{
-                background: 'rgba(204, 230, 248, 0.94)',
+                background: customColors.navGlassBg,
                 backdropFilter: 'blur(14px)',
-                boxShadow: '0 8px 30px rgba(15, 76, 129, 0.08)',
+                boxShadow: customColors.navShadow,
             }}
         >
             <CContainer fluid className="px-3 px-lg-5">
@@ -80,7 +82,7 @@ const PublicHeader = () => {
                         style={{
                             width: '40px',
                             height: '40px',
-                            background: 'linear-gradient(135deg, #0f4c81 0%, #1f6ea8 100%)',
+                            background: customColors.brandLogoGradient,
                         }}
                     >
                         X

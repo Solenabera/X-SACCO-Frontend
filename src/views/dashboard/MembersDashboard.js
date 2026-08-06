@@ -1,13 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MemberOverviewCards from './MemberOverviewCards'
 import RecentTransaction from './RecentTransaction'
 import { CCard, CCardBody, CCol, CRow } from '@coreui/react'
 
+import useApiFetch from '../../hooks/useAPIFetch';
+
 const MembersDashboard = () => {
+  const { data, isLoading } = useApiFetch(
+    { url: '/member/dashboard', method: 'GET' },
+    true
+  );
+
+  const [transactions, setTransactions] = useState([]);
+  const [stats, setStats] = useState({
+    currentSharePrice: 0,
+    savingIncreaseRate: 0,
+    loanExpiryDate: null,
+  });
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      setTransactions(data?.data?.transactions ?? []);
+      setStats({
+        currentSharePrice: data?.data?.stats?.currentSharePrice ?? 0,
+        savingIncreaseRate: data?.data?.stats?.savingIncreaseRate ?? 0,
+        loanExpiryDate: data?.data?.stats?.loanExpiryDate ?? null,
+      });
+    }
+  }, [isLoading, data]);
+
   return (
     <>
-      <MemberOverviewCards className="mb-4" />
-      <RecentTransaction />
+      <MemberOverviewCards className="mb-4" data={data} isLoading={isLoading} stats={stats} />
+      <RecentTransaction transactions={transactions} isLoading={isLoading} />
 
       <CRow className="g-4 mt-1">
         <CCol lg={6}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import {
     CBadge,
     CDropdown,
@@ -20,7 +20,7 @@ const AppHeaderNotification = () => {
 
     return (
         <CDropdown variant="nav-item">
-            <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
+            <CDropdownToggle placement="bottom-end" className="py-0 pe-0 text-primary" caret={false}>
                 <CIcon icon={cilBell} size="lg" />
             </CDropdownToggle>
             <CDropdownMenu className="pt-0" placement="bottom-end">
