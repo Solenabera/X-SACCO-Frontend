@@ -23,7 +23,7 @@ const _nav_Purchaser = [
     {
         component: CNavItem,
         name: 'Make Payment',
-        to: '/my-payments',
+        to: '/make-payments',
         icon: <CIcon icon={cilCreditCard} className="nav-icon" />,
     },
     {
@@ -51,6 +51,18 @@ const _nav_Purchaser = [
         icon: <CIcon icon={cilSwapHorizontal} className="nav-icon" />,
     },
     {
+        component: CNavItem,
+        name: 'Invitations',
+        to: '/invitations',
+        icon: <CIcon icon={cilPeople} className="nav-icon" />,
+    },
+    {
+        component: CNavItem,
+        name: 'Become an Agent',
+        to: '/become-an-agent',
+        icon: <CIcon icon={cilBriefcase} className="nav-icon" />,
+    },
+    {
         component: CNavGroup,
         name: 'Transfer',
         to: '/transfer',
@@ -75,18 +87,6 @@ const _nav_Purchaser = [
                 icon: <CIcon icon={cilMoney} className="nav-icon mx-1" />,
             },
         ],
-    },
-    {
-        component: CNavItem,
-        name: 'Invitations',
-        to: '/invitations',
-        icon: <CIcon icon={cilPeople} className="nav-icon" />,
-    },
-    {
-        component: CNavItem,
-        name: 'Become an Agent',
-        to: '/become-an-agent',
-        icon: <CIcon icon={cilBriefcase} className="nav-icon" />,
     },
 ]
 

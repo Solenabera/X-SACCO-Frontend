@@ -34,7 +34,7 @@ const useApiFetch = (
             setData(response.data || []);
         } catch (error) {
             if (error?.response?.status === 400) {
-                setErrors({ isError: true, message: 'Bad request', details: error });
+                setErrors({ isError: true, message: error?.response?.data?.message || 'Bad request', details: error });
             } else if (error?.response?.status === 401) {
                 setErrors({ isError: true, message: 'Unauthorized', details: error });
             } else if (error?.response?.status === 404) {

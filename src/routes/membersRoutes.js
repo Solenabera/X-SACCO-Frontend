@@ -22,7 +22,7 @@ const membersRoutes = [
     { path: '/my-savings', name: 'Savings', element: ManageMembersSavings },
     { path: '/my-loans', name: 'Loans', element: ManageMembersLoans },
     { path: '/my-transactions', name: 'My Transactions', element: ManageMembersTransactions },
-    { path: '/my-payments', name: 'Make Payment', element: MakePayment },
+    { path: '/make-payments', name: 'Make Payment', element: MakePayment },
     { path: '/invitations', name: 'Invitations', element: Invitations },
     { path: '/become-an-agent', name: 'Become an Agent', element: BecomeAnAgent },
 

@@ -10,7 +10,7 @@ const customColors = {
     pageBgColor: '#eef5fb',
 
     // Navigation & Glassmorphic theme colors (Single Point of Control)
-    navGlassBg: 'rgba(111, 177, 224, 0.94)',
+    navGlassBg: 'rgba(255, 255, 255, 0.94)',
     get navGlassBgSidebar() {
         return this.navGlassBg;
     },

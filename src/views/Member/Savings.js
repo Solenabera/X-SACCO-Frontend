@@ -15,8 +15,8 @@ import PageHeader from '../../components/shared/PageHeader'
 
 // Savings plans — static until API endpoint is available
 const savingsPlans = [
-    { plan: 'Emergency Reserve', progress: 70,  saved: 'ETB 17,500.00', target: 'ETB 25,000.00' },
-    { plan: 'Education Fund',    progress: 45,  saved: 'ETB 6,800.00',  target: 'ETB 15,000.00' },
+    { plan: 'Emergency Reserve', progress: 70, saved: 'ETB 17,500.00', target: 'ETB 25,000.00' },
+    { plan: 'Education Fund', progress: 45, saved: 'ETB 6,800.00', target: 'ETB 15,000.00' },
 ]
 
 const ManageMembersSavings = () => {
@@ -28,9 +28,9 @@ const ManageMembersSavings = () => {
     )
 
     // Derived values
-    const balance             = isLoading ? null : (data?.data?.account?.balance ?? data?.data?.balance ?? null)
+    const balance = isLoading ? null : (data?.data?.account?.balance ?? data?.data?.balance ?? null)
     const monthlyContribution = isLoading ? null : (data?.data?.account?.monthlyContribution ?? 'ETB 2,500.00')
-    const activePlan          = isLoading ? null : (data?.data?.account?.plan ?? 'Emergency Reserve')
+    const activePlan = isLoading ? null : (data?.data?.account?.plan ?? 'Emergency Reserve')
 
     const fmt = (v) => (v == null ? '—' : typeof v === 'number' ? `ETB ${Number(v).toLocaleString()}` : v)
 
@@ -83,7 +83,7 @@ const ManageMembersSavings = () => {
                             </div>
                             <button
                                 className="btn btn-sm btn-primary fw-semibold"
-                                onClick={() => navigate('/my-payments')}
+                                onClick={() => navigate('/make-payments')}
                             >
                                 Go to Make Payment →
                             </button>

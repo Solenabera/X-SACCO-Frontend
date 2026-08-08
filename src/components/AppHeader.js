@@ -52,10 +52,17 @@ const AppHeader = () => {
         >
             <CContainer className="px-3 px-lg-4" fluid>
                 <CHeaderToggler
-                    className="ps-1 text-primary"
+                    className="ps-1"
                     onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}
                 >
-                    <CIcon icon={cilMenu} size="lg" />
+                    <CIcon
+                        icon={cilMenu}
+                        size="lg"
+                        style={{
+                            color: customColors.headerBgColor,
+                            opacity: 1
+                        }}
+                    />
                 </CHeaderToggler>
 
                 <div className="d-none d-md-flex align-items-center fw-bold ms-2" style={{ color: customColors.headerBgColor }}>
@@ -64,10 +71,10 @@ const AppHeader = () => {
 
                 <CHeaderNav className="ms-auto">
                     <AppHeaderNotification />
-                    <li className="nav-item py-1">
+                    {/* <li className="nav-item py-1">
                         <div className="vr h-100 mx-2 text-primary opacity-25"></div>
-                    </li>
-                    <AppHeaderMessage />
+                    </li> */}
+                    {/* <AppHeaderMessage /> */}
                 </CHeaderNav>
                 <CHeaderNav>
                     {/* <li className="nav-item py-1">

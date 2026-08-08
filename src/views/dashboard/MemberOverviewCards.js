@@ -38,10 +38,75 @@ const MemberOverviewCards = ({ className, data, isLoading, stats = {} }) => {
 
   return (
     <div className={className}>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <div>
-          <div className="text-primary fw-bold mb-1">Member Overview</div>
-          <div className="small text-medium-emphasis">Share balance, savings summary, and loan status at a glance</div>
+      {/* ── Attractive section header ── */}
+      <div
+        className="rounded-4 mb-4 p-4"
+        style={{
+          background: 'linear-gradient(135deg, #0f4c81 0%, #1b6fb5 55%, #11a36a 100%)',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Decorative blurred circles */}
+        <div style={{
+          position: 'absolute', top: -30, right: -30,
+          width: 140, height: 140, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.07)', pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', bottom: -20, right: 80,
+          width: 80, height: 80, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.05)', pointerEvents: 'none',
+        }} />
+
+        <div className="d-flex align-items-center justify-content-between flex-wrap gap-3" style={{ position: 'relative', zIndex: 1 }}>
+          <div>
+            <div
+              className="fw-bold mb-1"
+              style={{ color: '#fff', fontSize: '1.25rem', letterSpacing: '-0.01em' }}
+            >
+              Member Overview
+            </div>
+            <div style={{ color: 'rgba(255,255,255,0.72)', fontSize: '0.84rem' }}>
+              Share balance, savings summary, and loan status at a glance
+            </div>
+          </div>
+
+          {/* Live indicator badge */}
+          <div
+            className="d-flex align-items-center gap-2 px-3 py-2 rounded-pill"
+            style={{ background: 'rgba(255,255,255,0.13)', backdropFilter: 'blur(8px)' }}
+          >
+            <span style={{
+              width: 8, height: 8, borderRadius: '50%', background: '#4ade80',
+              boxShadow: '0 0 0 3px rgba(74,222,128,0.3)',
+              display: 'inline-block', flexShrink: 0,
+            }} />
+            <span style={{ color: '#fff', fontSize: '0.78rem', fontWeight: 600 }}>Active Member</span>
+          </div>
+        </div>
+
+        {/* Shimmer divider */}
+        <div style={{
+          marginTop: '1rem',
+          height: 1,
+          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)',
+        }} />
+
+        {/* Sub-stat strip */}
+        <div className="d-flex gap-4 flex-wrap mt-3" style={{ position: 'relative', zIndex: 1 }}>
+          {[
+            { label: 'Shares', value: isLoading ? '—' : `${shareBalance}`, unit: shareBalance === 1 ? 'unit' : 'units' },
+            { label: 'Savings', value: isLoading ? '—' : `ETB ${Number(savingBalance).toLocaleString()}`, unit: '' },
+            { label: 'Loan', value: isLoading ? '—' : `ETB ${Number(loanBalance).toLocaleString()}`, unit: 'outstanding' },
+          ].map((s) => (
+            <div key={s.label}>
+              <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.label}</div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: '1rem' }}>
+                {s.value} <span style={{ fontWeight: 400, fontSize: '0.78rem', opacity: 0.7 }}>{s.unit}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

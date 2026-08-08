@@ -8,7 +8,13 @@ export const userPersonalInfoSchema = yup.object().shape({
     email: yup.string().email('Enter a valid email address.').required('Email is required.'),
     birthDate: yup.string().required('Birth Date is required.'),
     gender: yup.string().required('Gender is required.'),
-    password: yup.string().required('Password is required.'),
+    password: yup.string()
+        .required('Password is required.')
+        .min(8, 'Password must be at least 8 characters.')
+        .matches(/[A-Z]/, 'Password must contain at least one uppercase letter.')
+        .matches(/[a-z]/, 'Password must contain at least one lowercase letter.')
+        .matches(/[0-9]/, 'Password must contain at least one number.')
+        .matches(/[^A-Za-z0-9]/, 'Password must contain at least one special character.'),
     confirmPassword: yup.string()
         .oneOf([yup.ref('password'), null], 'Confirmation password does not match.')
         .required('Confirm Password is required.'),
