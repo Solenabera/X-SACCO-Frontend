@@ -16,6 +16,7 @@ const MembersDashboard = () => {
     currentSharePrice: 0,
     savingIncreaseRate: 0,
     loanExpiryDate: null,
+    membershipStatus: 'PENDING'
   });
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const MembersDashboard = () => {
         currentSharePrice: data?.data?.stats?.currentSharePrice ?? 0,
         savingIncreaseRate: data?.data?.stats?.savingIncreaseRate ?? 0,
         loanExpiryDate: data?.data?.stats?.loanExpiryDate ?? null,
+        membershipStatus: data?.data?.stats?.membershipStatus ?? 'PENDING'
       });
     }
   }, [isLoading, data]);

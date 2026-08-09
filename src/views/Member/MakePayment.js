@@ -45,6 +45,12 @@ const MakePayment = () => {
         false
     );
 
+    // POST — submit uploaded image for extraction
+    const { data: extractData, isLoading: extractLoading, errors: extractErrors, fetchData: extractFetch } = useApiFetch(
+        { url: 'member/make-payment/extract-from-receipt', method: 'POST', isFormData: true },
+        false
+    );
+
     // GET — load recent transactions (fetches immediately on mount)
     const {
         data: recentData,
@@ -79,6 +85,9 @@ const MakePayment = () => {
         } else {
             setPreview('pdf')
         }
+        const formData = new FormData();
+        formData.append('receipt', file);
+        extractFetch({ data: formData });
     }
 
     const handleSubmit = (e) => {
@@ -117,6 +126,17 @@ const MakePayment = () => {
             setSubmitting(false);
         }
     }, [apiErrors]);
+
+    // Watch for receipt data extraction results
+    useEffect(() => {
+        if (extractData && extractData.status === 'success' && extractData.data) {
+            const { amount: extAmount, bankName: extBank, transactionDate: extDate, transactionId: extTxId } = extractData.data;
+            if (extAmount) setAmount(extAmount);
+            if (extBank) setBankName(extBank);
+            if (extDate) setTransactionDate(extDate);
+            if (extTxId) setReference(extTxId);
+        }
+    }, [extractData]);
 
     const handleReset = () => {
         setTransactionType('');
@@ -214,6 +234,17 @@ const MakePayment = () => {
                                         isDragging={isDragging}
                                         onDragState={setIsDragging}
                                     />
+                                    {extractLoading && (
+                                        <div className="d-flex align-items-center gap-2 mt-2 text-primary small fw-semibold animate-pulse">
+                                            <CSpinner size="sm" color="primary" />
+                                            <span>Scanning receipt and extracting details...</span>
+                                        </div>
+                                    )}
+                                    {extractErrors?.isError && (
+                                        <div className="text-warning small mt-2">
+                                            Could not auto-extract details. Please enter manually.
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="mb-3">

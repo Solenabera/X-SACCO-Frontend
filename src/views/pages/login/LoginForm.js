@@ -1,3 +1,7 @@
+import { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form'
+
 import {
     CButton,
     CForm,
@@ -7,54 +11,48 @@ import {
     CInputGroupText,
     CSpinner,
 } from '@coreui/react';
-
 import CIcon from '@coreui/icons-react';
 import { cilLockLocked, cilLockUnlocked } from '@coreui/icons';
 
-import { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import useApiFetch from '../../../hooks/useAPIFetch';
 import { UserContext } from '../../../providers/userProvider';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { loginSchema } from '../../../yup/LoginSchema'
 
 import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage';
-import { set } from 'react-hook-form';
 
 const LoginForm = () => {
     const navigate = useNavigate();
     const { setUser, writeStorage, clearStorage } = useContext(UserContext);
 
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [password, setPassword] = useState('');
     const [showPass, setShowPass] = useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = useState('');
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors: loginErrors },
+    } = useForm({
+        resolver: yupResolver(loginSchema),
+        mode: 'onTouched',
+        defaultValues: {
+            phoneNumber: '',
+            password: '',
+        },
+    });
 
     const { data, isLoading, errors, fetchData } = useApiFetch(
         { url: 'login', method: 'POST' },
         false
     );
 
-    const handlePhoneChange = (e) => {
-        const val = e.target.value.replace(/\D/g, '');
-
-        if (val.length > 0 && val[0] !== '9') {
-            return;
-        }
-
-        if (val.length <= 9) {
-            setEmailErrorMessage('');
-            setPhoneNumber(val);
-        }
-    };
-
-    const loginWithPhoneNumberAndPassword = (e) => {
-        e.preventDefault();
-
-        if (phoneNumber.length !== 9) {
-            setEmailErrorMessage('Phone number must be exactly 9 digits long.');
-            return;
-        }
-
-        fetchData({ data: { phoneNumber: `+251${phoneNumber}`, password } });
+    const loginWithPhoneNumberAndPassword = (formData) => {
+        fetchData({
+            data: {
+                phoneNumber: `+251${formData.phoneNumber}`,
+                password: formData.password,
+            },
+        });
     };
 
     useEffect(() => {
@@ -62,23 +60,17 @@ const LoginForm = () => {
         clearStorage();
     }, []);
 
-    const SESSION_TIMEOUT_KEY = 'sessionTimeoutTimestamp';
-
     useEffect(() => {
         if (!isLoading && data) {
             const memberObj = data?.data?.member || data?.data?.user || data?.data;
             setUser(memberObj);
             writeStorage('user', memberObj);
-
-            const timeoutTimestamp = Date.now() + 30 * 60 * 1000;
-            writeStorage(SESSION_TIMEOUT_KEY, timeoutTimestamp.toString());
-
             navigate('/');
         }
     }, [isLoading, data]);
 
     return (
-        <CForm onSubmit={loginWithPhoneNumberAndPassword}>
+        <CForm onSubmit={handleSubmit(loginWithPhoneNumberAndPassword)}>
             <div className="text-center mb-4">
                 <h2 className="fw-bold" style={{ color: '#0f4c81' }}>
                     Sign In
@@ -96,13 +88,21 @@ const LoginForm = () => {
                     <CFormInput
                         type="tel"
                         placeholder="9XXXXXXXX"
-                        value={phoneNumber}
-                        onChange={handlePhoneChange}
+                        {...register('phoneNumber', {
+                            onChange: (e) => {
+                                const val = e.target.value.replace(/\D/g, '');
+                                if (val.length > 0 && val[0] !== '9') {
+                                    setValue('phoneNumber', '');
+                                    return;
+                                }
+                                setValue('phoneNumber', val.slice(0, 9));
+                            }
+                        })}
                         required
                         maxLength={9}
                     />
                 </CInputGroup>
-                <ErrorMessage message={emailErrorMessage} />
+                {loginErrors.phoneNumber && <ErrorMessage message={loginErrors.phoneNumber.message} />}
 
                 <CInputGroup className="mb-4">
                     <CInputGroupText className="bg-light text-primary" style={{ width: '48px', justifyContent: 'center' }}>
@@ -111,8 +111,7 @@ const LoginForm = () => {
                     <CFormInput
                         placeholder="Password"
                         type={showPass ? 'text' : 'password'}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        {...register('password')}
                         required
                     />
                     <CInputGroupText
@@ -137,6 +136,7 @@ const LoginForm = () => {
                         )}
                     </CInputGroupText>
                 </CInputGroup>
+                {loginErrors.password && <ErrorMessage message={loginErrors.password.message} />}
 
                 {errors?.isError && (
                     <ErrorMessage message={errors?.details?.response?.data?.message ??

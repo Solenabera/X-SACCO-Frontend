@@ -18,6 +18,7 @@ const MemberOverviewCards = ({ className, data, isLoading, stats = {} }) => {
     currentSharePrice = 0,
     savingIncreaseRate = 0,
     loanExpiryDate = null,
+    membershipStatus = 'PENDING'
   } = stats;
 
   useEffect(() => {
@@ -82,7 +83,7 @@ const MemberOverviewCards = ({ className, data, isLoading, stats = {} }) => {
               boxShadow: '0 0 0 3px rgba(74,222,128,0.3)',
               display: 'inline-block', flexShrink: 0,
             }} />
-            <span style={{ color: '#fff', fontSize: '0.78rem', fontWeight: 600 }}>Active Member</span>
+            <span style={{ color: '#fff', fontSize: '0.78rem', fontWeight: 600 }}>{membershipStatus} Member</span>
           </div>
         </div>
 
@@ -96,7 +97,7 @@ const MemberOverviewCards = ({ className, data, isLoading, stats = {} }) => {
         {/* Sub-stat strip */}
         <div className="d-flex gap-4 flex-wrap mt-3" style={{ position: 'relative', zIndex: 1 }}>
           {[
-            { label: 'Shares', value: isLoading ? '—' : `${shareBalance}`, unit: shareBalance === 1 ? 'unit' : 'units' },
+            { label: 'Shares', value: isLoading ? '—' : `${shareBalance}`, unit: shareBalance <= 1 ? 'unit' : 'units' },
             { label: 'Savings', value: isLoading ? '—' : `ETB ${Number(savingBalance).toLocaleString()}`, unit: '' },
             { label: 'Loan', value: isLoading ? '—' : `ETB ${Number(loanBalance).toLocaleString()}`, unit: 'outstanding' },
           ].map((s) => (
@@ -119,7 +120,7 @@ const MemberOverviewCards = ({ className, data, isLoading, stats = {} }) => {
               <div>
                 <div className="text-medium-emphasis small mb-1">Share Balance</div>
                 <div className="fs-5 fw-bold text-success">
-                  {isLoading ? '—' : `${shareBalance} ${Number(shareBalance) === 1 ? 'Share' : 'Shares'}`}
+                  {isLoading ? '—' : `${shareBalance} ${Number(shareBalance) <= 1 ? 'Share' : 'Shares'}`}
                 </div>
                 <div className="small text-success mt-1">
                   {isLoading ? '-' : "Current Share Price: ETB " + Number(currentSharePrice)}

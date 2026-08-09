@@ -6,7 +6,7 @@ import {
     CDropdownMenu,
     CDropdownToggle,
 } from '@coreui/react'
-import { cilEnvelopeOpen, cilEnvelopeClosed } from '@coreui/icons'
+import { cilEnvelopeOpen } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 const MESSAGES = [

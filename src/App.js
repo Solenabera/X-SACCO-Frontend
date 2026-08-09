@@ -5,10 +5,8 @@ import { useSelector } from 'react-redux'
 import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
 
-// We use those styles to show code examples, you should remove them in your application.
-import './scss/examples.scss'
-
 import { UserContext } from './providers/userProvider'
+import useAxiosInterceptor from './hooks/useAxiosInterceptor'
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
@@ -23,6 +21,12 @@ const Login = React.lazy(() => import('./views/pages/login/Login'))
 const RegisterStepper = React.lazy(() => import('./views/pages/register/RegisterStepper'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
+
+
+const AxiosInterceptorBridge = () => {
+    useAxiosInterceptor();
+    return null;
+};
 
 const App = () => {
     const { user } = useContext(UserContext)
@@ -41,10 +45,11 @@ const App = () => {
         }
 
         setColorMode(storedTheme)
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <BrowserRouter>
+            <AxiosInterceptorBridge />
             <Suspense
                 fallback={
                     <div className="pt-3 text-center">

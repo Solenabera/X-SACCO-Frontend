@@ -73,8 +73,8 @@ const AppHeader = () => {
                     <AppHeaderNotification />
                     {/* <li className="nav-item py-1">
                         <div className="vr h-100 mx-2 text-primary opacity-25"></div>
-                    </li> */}
-                    {/* <AppHeaderMessage /> */}
+                    </li>
+                    <AppHeaderMessage /> */}
                 </CHeaderNav>
                 <CHeaderNav>
                     {/* <li className="nav-item py-1">

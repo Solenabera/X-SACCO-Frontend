@@ -5,7 +5,6 @@ import {
     CBadge,
     CDropdown,
     CDropdownDivider,
-    CDropdownHeader,
     CDropdownItem,
     CDropdownMenu,
     CDropdownToggle,
@@ -25,63 +24,15 @@ import { UserContext } from '../../providers/userProvider';
 const AppHeaderDropdown = () => {
     const navigate = useNavigate();
     const { user, setUser, getStorage, clearStorage } = useContext(UserContext);
-
-    const [isSessionExpired, setSessionExpired] = useState(false);
-    const SESSION_TIMEOUT_KEY = "sessionTimeoutTimestamp";
-
     const handleLogout = useCallback(() => {
         setUser()
         clearStorage()
         navigate('/login');
-    }, [navigate]);
-
-    useEffect(() => {
-        let sessionTimeout;
-
-        const startSessionTimeout = () => {
-            const timeoutTimestamp = Date.now() + (30 * 60 * 1000);
-            sessionStorage.setItem(SESSION_TIMEOUT_KEY, timeoutTimestamp.toString());
-            sessionTimeout = setTimeout(() => { setSessionExpired(true); }, 30 * 60 * 1000);
-        };
-
-        const resetSessionTimeout = () => {
-            clearTimeout(sessionTimeout);
-            if (!isSessionExpired) startSessionTimeout();
-        };
-
-        const checkSessionTimeout = () => {
-            const timeoutTimestampStr = getStorage(SESSION_TIMEOUT_KEY);
-            if (!timeoutTimestampStr) { startSessionTimeout(); return; }
-            const timeoutTimestamp = parseInt(timeoutTimestampStr);
-            if (Date.now() > timeoutTimestamp) setSessionExpired(true);
-            else startSessionTimeout();
-        };
-
-        checkSessionTimeout();
-        document.addEventListener('mousemove', resetSessionTimeout);
-        document.addEventListener('keydown', resetSessionTimeout);
-
-        return () => {
-            clearTimeout(sessionTimeout);
-            document.removeEventListener('mousemove', resetSessionTimeout);
-            document.removeEventListener('keydown', resetSessionTimeout);
-        };
-    }, [isSessionExpired]);
-
-    useEffect(() => {
-        if (isSessionExpired) handleLogout();
-    }, [isSessionExpired, handleLogout]);
-
+    }, [navigate, setUser, clearStorage]);
     const displayName = user?.fullName || (user?.firstName
         ? `${user.firstName} ${user.lastName || ''}`.trim()
         : 'Member');
     const displaySub = user?.email || user?.phoneNumber || '';
-    const initials   = displayName
-        .split(' ')
-        .map((w) => w[0])
-        .slice(0, 2)
-        .join('')
-        .toUpperCase();
 
     /* ── Inline styles ── */
     const menuStyle = {
@@ -287,4 +238,3 @@ const AppHeaderDropdown = () => {
 }
 
 export default AppHeaderDropdown
-
