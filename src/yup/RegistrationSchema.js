@@ -9,6 +9,7 @@ export const userPersonalInfoSchema = yup.object().shape({
     birthDate: yup.string().required('Birth Date is required.'),
     gender: yup.string().required('Gender is required.'),
     password: yup.string().required('Password is required.'),
+    branchId: yup.string().required('Branch is required.'),
     confirmPassword: yup.string()
         .oneOf([yup.ref('password'), null], 'Confirmation password does not match.')
         .required('Confirm Password is required.'),

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     CForm,
     CFormInput,
@@ -14,6 +14,7 @@ import { cilLockLocked, cilLockUnlocked, cilCheckCircle, cilXCircle } from '@cor
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { userPersonalInfoSchema } from '../../../yup/RegistrationSchema'
+import useApiFetch from '../../../hooks/useAPIFetch'
 
 // Password strength rules configuration
 const PASSWORD_RULES = [
@@ -111,6 +112,18 @@ const Step2_UserPersonalInfo = ({ personalInfo = {}, onBack, onSuccess }) => {
 
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [branches, setBranches] = useState([])
+
+    const { data: branchData } = useApiFetch({
+        url: 'get-branches',
+        method: 'GET',
+    })
+
+    useEffect(() => {
+        if (branchData?.status === 'success' && branchData?.data?.branches) {
+            setBranches(branchData.data.branches)
+        }
+    }, [branchData])
 
     const password = watch('password') || ''
 
@@ -147,9 +160,21 @@ const Step2_UserPersonalInfo = ({ personalInfo = {}, onBack, onSuccess }) => {
             </CRow>
 
             <CRow>
-                <CCol md={12} className='mb-3'>
+                <CCol md={6} className='mb-3'>
                     <CFormInput type="email" placeholder="Email Address" {...register('email')} />
                     {errors.email && <small className='text-danger'>{errors.email.message}</small>}
+                </CCol>
+
+                <CCol md={6} className='mb-3'>
+                    <CFormSelect {...register('branchId')}>
+                        <option value="">-- Select Branch --</option>
+                        {branches.map((b) => (
+                            <option key={b.id} value={b.id}>
+                                {b.name} ({b.location})
+                            </option>
+                        ))}
+                    </CFormSelect>
+                    {errors.branchId && <small className='text-danger'>{errors.branchId.message}</small>}
                 </CCol>
             </CRow>
 

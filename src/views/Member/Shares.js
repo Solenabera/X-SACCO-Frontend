@@ -67,6 +67,12 @@ const ManageMembersShares = () => {
         true
     )
 
+    // Current share price
+    const { data: priceData, isLoading: priceLoading } = useApiFetch(
+        { url: '/share/share-price', method: 'GET' },
+        true
+    )
+
     // Share transactions (paginated, type-filtered)
     const { data: txData, isLoading: txLoading, errors: txErrors, fetchData: fetchTx } = useApiFetch(
         { url: `member/transaction?page=${page}&limit=${LIMIT}&type=SHARE_PURCHASE`, method: 'GET' },
@@ -83,9 +89,11 @@ const ManageMembersShares = () => {
 
     // Derive share portfolio values
     const shareObj = shareData?.data?.share || shareData?.data
-    const totalShare = shareObj?.amount || 0
-    const shareValue = shareObj?.shareValue?.shareValue || 1000
+    const totalShare = Number(shareObj?.amount || 0)
+    const shareValue = Number(priceData?.data?.sharePrice?.price || 0)
     const totalShareValue = totalShare * shareValue
+
+    const isStatsLoading = shareLoading || priceLoading
 
     const transactions = txData?.data?.transactions ?? []
     const hasNext = transactions.length === LIMIT
@@ -93,8 +101,8 @@ const ManageMembersShares = () => {
 
     const statCards = [
         { label: 'Total Shares Owned', value: `${totalShare} ${totalShare === 1 ? 'Share' : 'Shares'}`, color: '#059669', accent: '#d1fae5' },
-        { label: 'Current Share Price', value: `ETB ${Number(shareValue).toLocaleString()}`, color: '#0f4c81', accent: '#eff6ff' },
-        { label: 'Total Share Value', value: `ETB ${Number(totalShareValue).toLocaleString()}`, color: '#7c3aed', accent: '#f3e8ff' },
+        { label: 'Current Share Price', value: `ETB ${shareValue.toLocaleString()}`, color: '#0f4c81', accent: '#eff6ff' },
+        { label: 'Total Share Value', value: `ETB ${totalShareValue.toLocaleString()}`, color: '#7c3aed', accent: '#f3e8ff' },
     ]
 
     return (
@@ -117,7 +125,7 @@ const ManageMembersShares = () => {
                                 <CCardBody className="p-4" style={{ borderLeft: `4px solid ${s.color}` }}>
                                     <div className="small text-medium-emphasis mb-2">{s.label}</div>
                                     <div className="fs-4 fw-bold" style={{ color: s.color }}>
-                                        {shareLoading ? <CSpinner size="sm" /> : s.value}
+                                        {isStatsLoading ? <CSpinner size="sm" /> : s.value}
                                     </div>
                                 </CCardBody>
                             </CCard>

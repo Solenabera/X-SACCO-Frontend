@@ -45,7 +45,7 @@ const Step4_UploadFayda = ({ phoneNumber, personalInfo, userAddress, onBack, onS
         formData.append('birthDate', personalInfo.birthDate);
         formData.append('gender', personalInfo.gender);
         formData.append('password', personalInfo.password);
-        formData.append('branchId', 'a48ca7b9-941f-11f1-9b38-98e7f44ff3d5');
+        formData.append('branchId', personalInfo.branchId);
         // 3. Address Mapping
         formData.append('region', userAddress.region);
         formData.append('zone', userAddress.zone);
