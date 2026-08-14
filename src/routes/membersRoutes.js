@@ -9,6 +9,7 @@ const ManageMembersTransactions = React.lazy(() => import('../views/Member/Trans
 const MakePayment = React.lazy(() => import('../views/Member/MakePayment'))
 const Invitations = React.lazy(() => import('../views/Member/Invitations'))
 const BecomeAnAgent = React.lazy(() => import('../views/Member/BecomeAnAgent'))
+const Notifications = React.lazy(() => import('../views/Member/Notifications'))
 
 const NotFound = () => {
     const navigate = useNavigate()
@@ -25,6 +26,7 @@ const membersRoutes = [
     { path: '/make-payments', name: 'Make Payment', element: MakePayment },
     { path: '/invitations', name: 'Invitations', element: Invitations },
     { path: '/become-an-agent', name: 'Become an Agent', element: BecomeAnAgent },
+    { path: '/notifications', name: 'Notifications', element: Notifications },
 
     { path: '*', name: '404', element: NotFound },
 ]
