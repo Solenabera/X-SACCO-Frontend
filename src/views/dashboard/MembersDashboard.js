@@ -137,7 +137,7 @@ const MembersDashboard = () => {
                 className="rounded-pill px-2 py-1 d-inline-flex align-items-center gap-1"
                 style={{ background: '#d1fae5', fontSize: '0.75rem', color: '#059669', fontWeight: 600 }}
               >
-                <span>✔</span> Market rate active
+                {/* <span>✔</span> Market rate active */}
               </div>
             </CCardBody>
           </CCard>

@@ -46,7 +46,8 @@ const AppHeader = () => {
                 backdropFilter: 'blur(14px)',
                 boxShadow: customColors.navShadow,
                 borderBottom: `1px solid ${customColors.navBorderColor}`,
-                position: 'relative',
+                position: 'sticky',
+                top: 0,
                 zIndex: 1030,
             }}
         >

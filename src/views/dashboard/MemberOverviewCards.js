@@ -163,7 +163,7 @@ const MemberOverviewCards = ({ className, data, isLoading, stats = {} }) => {
                   {isLoading ? '—' : `ETB ${Number(loanBalance).toLocaleString()}`}
                 </div>
                 <div className="small text-secondary mt-1">
-                  {isLoading ? '—' : `Expiry Date: ${formatDate(loanExpiryDate)}`}
+                  {isLoading ? '—' : Number(loanBalance) > 0 ? `Expiry Date: ${formatDate(loanExpiryDate)} ` : "No active loan on record."}
                 </div>
               </div>
               <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#7a5af8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>

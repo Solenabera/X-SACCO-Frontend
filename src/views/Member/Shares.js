@@ -26,8 +26,8 @@ const formatDate = (dateStr) => {
 
 const HISTORY_COLUMNS = [
     {
-        key: 'createdAt',
-        label: 'Date',
+        key: 'date',
+        label: 'Txn. Date',
         cellClass: 'text-nowrap',
         render: (val) => <span className="small">{formatDate(val)}</span>,
     },
@@ -75,12 +75,12 @@ const ManageMembersShares = () => {
 
     // Share transactions (paginated, type-filtered)
     const { data: txData, isLoading: txLoading, errors: txErrors, fetchData: fetchTx } = useApiFetch(
-        { url: `member/transaction?page=${page}&limit=${LIMIT}&type=SHARE_PURCHASE`, method: 'GET' },
+        { url: `member/transaction?page=${page}&limit=${LIMIT}&type=SHARE_BUY`, method: 'GET' },
         false
     )
 
     const loadPage = useCallback((p) => {
-        fetchTx({ url: `member/transaction?page=${p}&limit=${LIMIT}&type=SHARE_PURCHASE` })
+        fetchTx({ url: `member/transaction?page=${p}&limit=${LIMIT}&type=SHARE_BUY` })
     }, [fetchTx])
 
     useEffect(() => {
@@ -112,7 +112,7 @@ const ManageMembersShares = () => {
                     icon={<CIcon icon={cilChartPie} className="text-white" size="lg" />}
                     title="My Shares"
                     subtitle="View your share position and purchase history"
-                    gradient="linear-gradient(135deg, #11a36a, #059669)"
+                    gradient="linear-gradient(135deg, #0f4c81, #1b6fb5)"
                 />
             </CCol>
 
@@ -138,13 +138,13 @@ const ManageMembersShares = () => {
             <CCol xs={12}>
                 <div
                     className="rounded-4 p-3 d-flex align-items-center justify-content-between flex-wrap gap-2"
-                    style={{ background: '#f0fdf4', border: '1.5px solid #bbf7d0' }}
+                    style={{ background: '#f7fbff', border: '1.5px solid #dcecff' }}
                 >
-                    <div className="small text-success fw-semibold">
+                    <div className="small fw-semibold text-primary">
                         Want to purchase more shares?
                     </div>
                     <button
-                        className="btn btn-sm btn-success fw-semibold"
+                        className="btn btn-sm btn-primary fw-semibold"
                         onClick={() => navigate('/make-payments')}
                     >
                         <CIcon icon={cilCreditCard} className="me-1" />

@@ -56,38 +56,38 @@ const _nav_Purchaser = [
         to: '/invitations',
         icon: <CIcon icon={cilPeople} className="nav-icon" />,
     },
-    {
-        component: CNavItem,
-        name: 'Become an Agent',
-        to: '/become-an-agent',
-        icon: <CIcon icon={cilBriefcase} className="nav-icon" />,
-    },
-    {
-        component: CNavGroup,
-        name: 'Transfer',
-        to: '/transfer',
-        icon: <CIcon icon={cilSend} className="nav-icon" />,
-        items: [
-            {
-                component: CNavItem,
-                name: 'Transfer Share',
-                to: '/transfer/share',
-                icon: <CIcon icon={cilChartPie} className="nav-icon mx-1" />,
-            },
-            {
-                component: CNavItem,
-                name: 'Transfer Savings',
-                to: '/transfer/savings',
-                icon: <CIcon icon={cilWallet} className="nav-icon mx-1" />,
-            },
-            {
-                component: CNavItem,
-                name: 'Transfer Loan',
-                to: '/transfer/loan',
-                icon: <CIcon icon={cilMoney} className="nav-icon mx-1" />,
-            },
-        ],
-    },
+    // {
+    //     component: CNavItem,
+    //     name: 'Become an Agent',
+    //     to: '/become-an-agent',
+    //     icon: <CIcon icon={cilBriefcase} className="nav-icon" />,
+    // },
+    // {
+    //     component: CNavGroup,
+    //     name: 'Transfer',
+    //     to: '/transfer',
+    //     icon: <CIcon icon={cilSend} className="nav-icon" />,
+    //     items: [
+    //         {
+    //             component: CNavItem,
+    //             name: 'Transfer Share',
+    //             to: '/transfer/share',
+    //             icon: <CIcon icon={cilChartPie} className="nav-icon mx-1" />,
+    //         },
+    //         {
+    //             component: CNavItem,
+    //             name: 'Transfer Savings',
+    //             to: '/transfer/savings',
+    //             icon: <CIcon icon={cilWallet} className="nav-icon mx-1" />,
+    //         },
+    //         {
+    //             component: CNavItem,
+    //             name: 'Transfer Loan',
+    //             to: '/transfer/loan',
+    //             icon: <CIcon icon={cilMoney} className="nav-icon mx-1" />,
+    //         },
+    //     ],
+    // },
 ]
 
 export default {

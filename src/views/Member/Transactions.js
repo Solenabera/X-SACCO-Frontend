@@ -52,7 +52,7 @@ const isCredit = (direction) => direction === 'DEBIT' // member received money
 const COLUMNS = [
     {
         key: 'date',
-        label: 'Date',
+        label: 'Txn. Date',
         cellClass: 'text-nowrap',
         render: (_, row) => <span className="small">{formatDate(row.createdAt)}</span>,
     },
@@ -117,10 +117,10 @@ const EMPTY_FILTERS = { type: '', status: '', startDate: '', endDate: '' }
 // Build query string from filter state (omits empty values)
 const buildUrl = (page, filters) => {
     const params = new URLSearchParams({ page: String(page), limit: String(LIMIT) })
-    if (filters.type)      params.set('type', filters.type)
-    if (filters.status)    params.set('status', filters.status)
+    if (filters.type) params.set('type', filters.type)
+    if (filters.status) params.set('status', filters.status)
     if (filters.startDate) params.set('startDate', filters.startDate)
-    if (filters.endDate)   params.set('endDate', filters.endDate)
+    if (filters.endDate) params.set('endDate', filters.endDate)
     return `member/transaction?${params.toString()}`
 }
 
@@ -177,8 +177,8 @@ const ManageMembersTransactions = () => {
 
     const statCards = [
         { label: 'Total Received', value: `+ETB ${Number(totalDebit).toLocaleString(undefined, { minimumFractionDigits: 2 })}`, color: '#059669', bg: '#d1fae5' },
-        { label: 'Total Paid',     value: `-ETB ${Number(totalCredit).toLocaleString(undefined, { minimumFractionDigits: 2 })}`, color: '#dc2626', bg: '#fee2e2' },
-        { label: 'Net',            value: `${memberNet >= 0 ? '+' : ''}ETB ${Math.abs(memberNet).toLocaleString(undefined, { minimumFractionDigits: 2 })}`, color: memberNet >= 0 ? '#0f4c81' : '#dc2626', bg: '#eff6ff' },
+        { label: 'Total Paid', value: `-ETB ${Number(totalCredit).toLocaleString(undefined, { minimumFractionDigits: 2 })}`, color: '#dc2626', bg: '#fee2e2' },
+        { label: 'Net', value: `${memberNet >= 0 ? '+' : ''}ETB ${Math.abs(memberNet).toLocaleString(undefined, { minimumFractionDigits: 2 })}`, color: memberNet >= 0 ? '#0f4c81' : '#dc2626', bg: '#eff6ff' },
     ]
 
     const filterCount = activeFilterCount(applied)
@@ -190,7 +190,7 @@ const ManageMembersTransactions = () => {
                     icon={<CIcon icon={cilSwapHorizontal} className="text-white" size="lg" />}
                     title="My Transactions"
                     subtitle="A complete record of all your ledger entries"
-                    gradient="linear-gradient(135deg, #0f4c81, #4f46e5)"
+                    gradient="linear-gradient(135deg, #0f4c81, #1b6fb5)"
                     actions={
                         <button
                             className="btn btn-sm btn-primary fw-semibold"

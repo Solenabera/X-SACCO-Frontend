@@ -137,7 +137,7 @@ const ManageMembersLoans = () => {
                     icon={<CIcon icon={cilMoney} className="text-white" size="lg" />}
                     title="My Loans"
                     subtitle="Manage your active loans, repayments, and applications"
-                    gradient="linear-gradient(135deg, #7a5af8, #5b4b8a)"
+                    gradient="linear-gradient(135deg, #0f4c81, #1b6fb5)"
                 />
             </CCol>
 
