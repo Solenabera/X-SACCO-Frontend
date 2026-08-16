@@ -21,17 +21,15 @@ import HistoryTable from '../../components/shared/HistoryTable'
 import StatusBadge from '../../components/shared/StatusBadge'
 import useApiFetch from '../../hooks/useAPIFetch'
 
-// Maps DB enum → human-readable label
-const TYPE_LABELS = {
-    REGISTRATION_FEE: 'Registration Fee',
-    SAVINGS_DEPOSIT: 'Savings Deposit',
-    SHARE_PURCHASE: 'Share Purchase',
-    LOAN_REPAYMENT: 'Loan Repayment',
-    LOAN_DISBURSEMENT: 'Loan Disbursement',
-    SAVINGS_WITHDRAWAL: 'Savings Withdrawal',
-}
+// Maps DB enum values to human-readable labels
+const formatType = (type) => {
+    if (!type) return '—'
 
-const formatType = (type) => TYPE_LABELS[type] ?? type ?? '—'
+    return type
+        .split('_') // Split the string into an array of words wherever there is an underscore
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter, lowercase the rest
+        .join(' ') // Join the words back together with a space
+}
 
 const formatDate = (dateStr) => {
     if (!dateStr) return '—'
@@ -39,12 +37,19 @@ const formatDate = (dateStr) => {
 }
 
 const formatAmount = (amount, direction) => {
-    if (amount == null) return '—'
+    if (amount == null) return '—';
+
     // From the member's perspective:
-    //   DB CREDIT = association received = member paid OUT → negative
-    //   DB DEBIT  = association paid    = member received → positive
-    const sign = direction === 'DEBIT' ? '+' : '-'
-    return `${sign}ETB ${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`
+    //   DB CREDIT = association received = member paid OUT → negative (-)
+    //   DB DEBIT  = association paid     = member received → positive (+)
+    const sign = direction === 'DEBIT' ? '+' : '-';
+
+    const formattedNumber = Number(amount).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    return `${sign}ETB ${formattedNumber}`;
 }
 
 const isCredit = (direction) => direction === 'DEBIT' // member received money
@@ -132,11 +137,23 @@ const ManageMembersTransactions = () => {
     const [page, setPage] = useState(1)
     const [filters, setFilters] = useState(EMPTY_FILTERS)
     const [applied, setApplied] = useState(EMPTY_FILTERS) // filters actually sent to API
+    const [saccoTransactionTypes, setSaccoTransactionTypes] = useState([])
 
     const { data, isLoading, errors, fetchData } = useApiFetch(
         { url: buildUrl(1, EMPTY_FILTERS), method: 'GET' },
         false
     )
+
+    const { data: saccoTransactionTypesData } = useApiFetch(
+        { url: 'member/transaction/transaction-types', method: 'GET' },
+        true
+    )
+
+    useEffect(() => {
+        if (saccoTransactionTypesData?.status === 'success' && saccoTransactionTypesData?.data?.transactionTypes) {
+            setSaccoTransactionTypes(saccoTransactionTypesData.data.transactionTypes)
+        }
+    }, [saccoTransactionTypesData])
 
     const load = useCallback((p, f) => {
         fetchData({ url: buildUrl(p, f) })
@@ -248,8 +265,10 @@ const ManageMembersTransactions = () => {
                                 <CFormLabel className="small fw-semibold mb-1">Transaction Type</CFormLabel>
                                 <CFormSelect size="sm" value={filters.type} onChange={set('type')}>
                                     <option value="">All types</option>
-                                    {Object.entries(TYPE_LABELS).map(([val, label]) => (
-                                        <option key={val} value={val}>{label}</option>
+                                    {saccoTransactionTypes.map((t) => (
+                                        <option key={t.id} value={t.name}>
+                                            {formatType(t.name)}
+                                        </option>
                                     ))}
                                 </CFormSelect>
                             </CCol>

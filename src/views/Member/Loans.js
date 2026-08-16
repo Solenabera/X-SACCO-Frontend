@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import {
     CBadge,
     CButton,
@@ -6,12 +6,6 @@ import {
     CCardBody,
     CCol,
     CRow,
-    CTable,
-    CTableBody,
-    CTableDataCell,
-    CTableHead,
-    CTableHeaderCell,
-    CTableRow,
     CModal,
     CModalHeader,
     CModalTitle,
@@ -20,118 +14,259 @@ import {
     CFormInput,
     CFormSelect,
     CAlert,
+    CSpinner,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilCheckCircle, cilMoney, cilPlus, cilCalculator } from '@coreui/icons'
+import { cilCheckCircle, cilMoney, cilPlus, cilCalculator, cilWarning } from '@coreui/icons'
 import { UserContext } from '../../providers/userProvider'
 import AmortizationScheduleModal from '../../components/AmortizationScheduleModal'
 import PageHeader from '../../components/shared/PageHeader'
 import StatusBadge from '../../components/shared/StatusBadge'
+import useApiFetch from '../../hooks/useAPIFetch'
 
-const activeLoansList = [
-    {
-        id: 'LN-201',
-        type: 'Business Expansion Loan',
-        principal: 50000,
-        balance: 'ETB 18,500.00',
-        dueDate: '2026-08-14',
-        interestRate: 12,
-        tenureMonths: 12,
-        method: 'Reducing Balance',
-        status: 'Active',
-    },
-    {
-        id: 'LN-202',
-        type: 'Emergency Support Loan',
-        principal: 20000,
-        balance: 'ETB 6,200.00',
-        dueDate: '2026-08-30',
-        interestRate: 9,
-        tenureMonths: 6,
-        method: 'Flat Rate',
-        status: 'Active',
-    },
-]
-
-const repaymentSchedule = [
-    { date: '2026-08-05', amount: 'ETB 1,500.00', status: 'Pending' },
-    { date: '2026-08-20', amount: 'ETB 1,500.00', status: 'Scheduled' },
-    { date: '2026-09-05', amount: 'ETB 1,500.00', status: 'Scheduled' },
-]
+const loanModalStyles = `
+  .loan-apply-modal .modal-content {
+      border-radius: 16px !important;
+      overflow: hidden !important;
+      border: none !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  }
+  .loan-apply-modal-header {
+      background: var(--sacco-primary-gradient, linear-gradient(135deg, #0f4c81 0%, #1b5e9d 100%)) !important;
+      border-bottom: none !important;
+      padding: 1.5rem !important;
+  }
+  .loan-apply-modal-title {
+      color: #ffffff !important;
+      font-size: 1.25rem !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.025em !important;
+  }
+  .loan-apply-modal .btn-close {
+      filter: invert(1) grayscale(1) brightness(2) !important;
+      opacity: 0.8 !important;
+      transition: opacity 0.2s ease !important;
+  }
+  .loan-apply-modal .btn-close:hover {
+      opacity: 1 !important;
+  }
+  .loan-input-card {
+      border-radius: 12px !important;
+      border: 1px solid #e2e8f0 !important;
+      background: #f8fafc !important;
+      padding: 1.5rem !important;
+  }
+  .loan-input-group {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 0 0.5rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .loan-input-group:focus-within {
+      border-color: var(--sacco-primary, #0f4c81);
+      box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.15);
+  }
+  .loan-input-group .loan-addon {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0 0.5rem;
+      user-select: none;
+  }
+  .loan-input-group input {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      padding: 0.6rem 0.5rem !important;
+      font-size: 0.9rem !important;
+      width: 100%;
+      background: transparent;
+      color: #1e293b;
+      font-weight: 500;
+  }
+  .loan-select-premium {
+      background-color: #ffffff !important;
+      border-radius: 8px !important;
+      border: 1px solid #cbd5e1 !important;
+      padding: 0.6rem 0.8rem !important;
+      font-size: 0.9rem !important;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+      color: #1e293b !important;
+      font-weight: 500 !important;
+  }
+  .loan-select-premium:focus {
+      border-color: var(--sacco-primary, #0f4c81) !important;
+      box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.15) !important;
+  }
+  .loan-guarantor-box {
+      border-radius: 12px !important;
+      border: 1px solid rgba(15, 76, 129, 0.12) !important;
+      background: #ffffff !important;
+      padding: 1.5rem !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+  }
+  .preview-btn {
+      border-radius: 8px !important;
+      padding: 0.6rem 1.2rem !important;
+      font-weight: 600 !important;
+      font-size: 0.9rem !important;
+      color: var(--sacco-primary, #0f4c81) !important;
+      border: 1.5px solid var(--sacco-primary, #0f4c81) !important;
+      background: transparent !important;
+      transition: background-color 0.2s ease, color 0.2s ease !important;
+  }
+  .preview-btn:hover {
+      background-color: var(--sacco-primary, #0f4c81) !important;
+      color: #ffffff !important;
+  }
+  .submit-request-btn {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 0.6rem 1.2rem !important;
+      font-weight: 700 !important;
+      font-size: 0.9rem !important;
+      box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2) !important;
+      color: #ffffff !important;
+      transition: opacity 0.2s ease, transform 0.2s ease !important;
+  }
+  .submit-request-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3) !important;
+      opacity: 0.95;
+  }
+  .cancel-request-btn {
+      border-radius: 8px !important;
+      padding: 0.6rem 1.2rem !important;
+      font-weight: 600 !important;
+      font-size: 0.9rem !important;
+  }
+`;
 
 const ManageMembersLoans = () => {
     const { user } = useContext(UserContext)
-    const [loans, setLoans] = useState(activeLoansList)
-    const [showApplyModal, setShowApplyModal] = useState(false)
+
+    // Toast state
     const [toastMessage, setToastMessage] = useState('')
 
-    // Amortization Modal State
+    // Modal states
+    const [showApplyModal, setShowApplyModal] = useState(false)
     const [showAmortizationModal, setShowAmortizationModal] = useState(false)
+
+    // API 1: Fetch General Eligibility
+    const {
+        data: eligibilityData,
+        isLoading: eligibilityLoading,
+        errors: eligibilityErrors,
+        fetchData: fetchEligibility
+    } = useApiFetch({ url: 'loan/get-member-eligible-for-loans', method: 'GET' }, true)
+
+    // API 2: Fetch Active & Applied Member Loans
+    const {
+        data: loansData,
+        isLoading: loansLoading,
+        errors: loansErrors,
+        fetchData: fetchLoans
+    } = useApiFetch({ url: 'loan/get-member-loan', method: 'GET' }, true)
+
+    // API 3: Apply for Loan
+    const {
+        data: applyResult,
+        isLoading: applyLoading,
+        errors: applyErrors,
+        fetchData: submitApplyRequest
+    } = useApiFetch({ url: 'loan/new-loan', method: 'POST' }, false)
+
+    // API 4: Fetch Available Loan Packages
+    const {
+        data: packagesData,
+        isLoading: packagesLoading,
+        errors: packagesErrors,
+        fetchData: fetchPackages
+    } = useApiFetch({ url: 'loan/get-loan-packages', method: 'GET' }, true)
+
+    // Loan Application Form State
+    const [requestedAmount, setRequestedAmount] = useState(100000)
+    const [selectedPackageId, setSelectedPackageId] = useState('')
+
+    // Amortization Modal Config
     const [amortizationConfig, setAmortizationConfig] = useState({
         principal: 100000,
-        interestRate: 12,
+        interestRate: 13.5,
         tenureMonths: 12,
         method: 'Reducing Balance',
         title: 'Loan Repayment Amortization Schedule'
     })
 
-    // Member profile stats (Default Dawit Tadesse stats for demo)
-    const memberSavings = 45000 // Member's active savings balance
-    const memberTenureMonths = 8 // Member has fulfilled 8 months of membership (>= 5 months requirement)
-    const minRequiredTenureMonths = 5
-    const maxLoanMultiplier = 4 // 25% savings requirement -> max 4x savings
-    const maxEligibleLoan = memberSavings * maxLoanMultiplier // ETB 180,000
+    // Computed states from Backend response
+    const overallEligible = eligibilityData?.data?.overallEligible || false
+    const criteria = eligibilityData?.data?.criteria || {}
+    const memberSavings = Number(eligibilityData?.data?.savingAccount?.balance) || 0
+    const maxLoanMultiplier = 4 // Max 4x savings
+    const maxEligibleLoan = memberSavings * maxLoanMultiplier
 
-    // Loan Application Form State
-    const [requestedAmount, setRequestedAmount] = useState(100000)
-    const [loanType, setLoanType] = useState('Development Loan')
-    const [tenureMonths, setTenureMonths] = useState(24)
+    const loanPackages = packagesData?.data || []
+    const selectedPackage = loanPackages.find(p => p.id === selectedPackageId) || null
 
-    // Calculated Rule Metrics
-    const savingsCoveragePct = requestedAmount > 0 ? ((memberSavings / requestedAmount) * 100).toFixed(1) : 0
-    const isTenureEligible = memberTenureMonths >= minRequiredTenureMonths
-    const isSavingsEligible = memberSavings >= (requestedAmount * 0.25)
-    const isFormValid = isTenureEligible && isSavingsEligible && requestedAmount > 0
+    // Real-time validations
+    const isFormValid = overallEligible && requestedAmount >= 0 && !!selectedPackageId
 
     const showToast = (msg) => {
         setToastMessage(msg)
         setTimeout(() => setToastMessage(''), 5000)
     }
 
+    // Set initial form values when modal opens
+    useEffect(() => {
+        if (showApplyModal) {
+            setRequestedAmount(50000)
+            setSelectedPackageId('')
+            fetchPackages()
+        }
+    }, [showApplyModal])
+
+    // Watch loan application submission result
+    useEffect(() => {
+        if (applyResult?.status === 'success') {
+            setShowApplyModal(false)
+            showToast(applyResult?.message || 'Loan Application submitted successfully!')
+            // Refresh eligibility status & loans list
+            fetchEligibility()
+            fetchLoans()
+        }
+    }, [applyResult, fetchEligibility, fetchLoans])
+
     const openAmortizationForLoan = (loan) => {
         setAmortizationConfig({
-            principal: loan.principal || 50000,
-            interestRate: loan.interestRate || 12,
-            tenureMonths: loan.tenureMonths || 12,
-            method: loan.method || 'Reducing Balance',
-            title: `Amortization Schedule: ${loan.type} (${loan.id})`
+            principal: Number(loan.principal_amount) || 50000,
+            interestRate: Number(loan.interest_rate) || 12,
+            tenureMonths: loan.term_months || 12,
+            method: loan.interest_type || 'Reducing Balance',
+            title: `Amortization Schedule: ${loan.package_name || 'Loan'} (LN-${loan.loan_number})`
         })
         setShowAmortizationModal(true)
     }
 
-    const handleApplyLoan = (e) => {
-        e.preventDefault()
-        if (!isFormValid) return
+    const handleApplyLoan = async (e) => {
+        if (e) e.preventDefault()
+        if (!isFormValid || !selectedPackageId) return
 
-        const newLoan = {
-            id: 'LN-' + Math.floor(200 + Math.random() * 800),
-            type: loanType,
-            principal: requestedAmount,
-            balance: `ETB ${Number(requestedAmount).toLocaleString()}.00`,
-            dueDate: '2026-09-30',
-            interestRate: 13.5,
-            tenureMonths: tenureMonths,
-            method: 'Reducing Balance',
-            status: 'Pending Appraisal',
-        }
-
-        setLoans([...loans, newLoan])
-        setShowApplyModal(false)
-        showToast(`Loan Application for ETB ${Number(requestedAmount).toLocaleString()} submitted for staff appraisal!`)
+        await submitApplyRequest({
+            data: {
+                loan_package_id: selectedPackageId,
+                requestedAmount
+            }
+        })
     }
+
+    const memberLoans = loansData?.data || []
 
     return (
         <CRow className="g-4">
+            {/* Page Header */}
             <CCol xs={12}>
                 <PageHeader
                     icon={<CIcon icon={cilMoney} className="text-white" size="lg" />}
@@ -141,6 +276,7 @@ const ManageMembersLoans = () => {
                 />
             </CCol>
 
+            {/* Success Toast */}
             {toastMessage && (
                 <CCol xs={12}>
                     <CAlert color="success" dismissible className="border-0 shadow-sm fw-semibold mb-0">
@@ -149,262 +285,391 @@ const ManageMembersLoans = () => {
                 </CCol>
             )}
 
-            {/* Top Eligibility Policy Banner */}
-            <CCol xs={12}>
-                <CCard className="border-0 shadow-sm" style={{ background: 'linear-gradient(135deg, #0f4c81 0%, #1b5e9d 100%)', color: '#ffffff' }}>
-                    <CCardBody className="p-4">
-                        <CRow className="align-items-center g-3">
-                            <CCol md={7}>
-                                <h5 className="fw-bold mb-2">X-SACCO Loan Policy & Amortization Calculator</h5>
-                                <div className="small opacity-90">
-                                    Calculate month-by-month repayment installments, principal portions, and interest breakdowns.
-                                </div>
-                                <div className="d-flex gap-4 mt-3 flex-wrap">
-                                    <div className="bg-white bg-opacity-10 p-2 px-3 rounded-3">
-                                        <div className="small text-warning fw-semibold">1. Membership Tenure</div>
-                                        <div className="fw-bold fs-6">≥ 6 Months Active Membership</div>
-                                        <div className="small opacity-75">Your Tenure: <strong>{memberTenureMonths} Months</strong> (Eligible)</div>
-                                    </div>
-                                    <div className="bg-white bg-opacity-10 p-2 px-3 rounded-3">
-                                        <div className="small text-warning fw-semibold">2. Minimum Savings Ratio</div>
-                                        <div className="fw-bold fs-6">≥ 25% of Requested Loan (Max 4x)</div>
-                                        <div className="small opacity-75">Your Savings: <strong>ETB {memberSavings.toLocaleString()}</strong> (Max Loan: ETB {maxEligibleLoan.toLocaleString()})</div>
-                                    </div>
-                                </div>
-                            </CCol>
-                            <CCol md={5} className="text-md-end d-flex gap-2 justify-content-md-end flex-wrap">
-                                <CButton
-                                    color="light"
-                                    size="lg"
-                                    className="fw-bold text-primary shadow-sm"
-                                    onClick={() => {
-                                        setAmortizationConfig({
-                                            principal: 100000,
-                                            interestRate: 12,
-                                            tenureMonths: 12,
-                                            method: 'Reducing Balance',
-                                            title: 'Interactive Repayment Amortization Calculator'
-                                        })
-                                        setShowAmortizationModal(true)
-                                    }}
-                                >
-                                    <CIcon icon={cilCalculator} className="me-2" /> Amortization Calculator
-                                </CButton>
-                                <CButton
-                                    color="success"
-                                    size="lg"
-                                    className="text-white fw-bold shadow-sm"
-                                    onClick={() => setShowApplyModal(true)}
-                                >
-                                    <CIcon icon={cilPlus} className="me-2" /> Apply For Loan
-                                </CButton>
-                            </CCol>
-                        </CRow>
-                    </CCardBody>
-                </CCard>
-            </CCol>
-
+            {/* SECTION 1: LOAN ELIGIBILITY */}
             <CCol xs={12}>
                 <CCard className="border-0 shadow-sm">
                     <CCardBody className="p-4">
-                        <div className="fw-bold text-primary fs-5 mb-3">Active & Applied Member Loans</div>
+                        <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                            <div>
+                                <h4 className="fw-bold text-primary mb-1">General Loan Eligibility</h4>
+                                <p className="text-muted small mb-0">General rules and requirements to qualify for a loan.</p>
+                            </div>
+                            {eligibilityLoading ? (
+                                <CSpinner size="sm" color="primary" />
+                            ) : (
+                                <CBadge
+                                    color={overallEligible ? 'success' : 'danger'}
+                                    className="p-2 fs-6"
+                                    style={{ borderRadius: '6px' }}
+                                >
+                                    {overallEligible ? 'ELIGIBLE' : 'INELIGIBLE'}
+                                </CBadge>
+                            )}
+                        </div>
 
+                        {eligibilityErrors?.isError && (
+                            <CAlert color="danger" className="border-0 shadow-sm mb-4">
+                                {eligibilityErrors?.message || 'Failed to fetch loan eligibility data.'}
+                            </CAlert>
+                        )}
+
+                        {/* Overall Status Banner */}
+                        {!eligibilityLoading && !eligibilityErrors?.isError && (
+                            <CAlert
+                                color={overallEligible ? 'success' : 'warning'}
+                                className="border-0 shadow-sm d-flex align-items-center gap-3 mb-4 p-3"
+                                style={{
+                                    background: overallEligible ? '#eafaf1' : '#fff9e6',
+                                    color: overallEligible ? '#1b7a43' : '#b27b00'
+                                }}
+                            >
+                                <CIcon
+                                    icon={overallEligible ? cilCheckCircle : cilWarning}
+                                    size="xl"
+                                    className={overallEligible ? 'text-success' : 'text-warning'}
+                                />
+                                <div>
+                                    <h6 className="fw-bold mb-1">
+                                        {overallEligible
+                                            ? 'Congratulations! You meet all loan eligibility criteria.'
+                                            : 'You are currently ineligible for a new loan.'
+                                        }
+                                    </h6>
+                                    <span className="small">
+                                        {overallEligible
+                                            ? 'You are qualified to apply for a loan. Click the "Apply For Loan" button below to proceed.'
+                                            : 'Please review the criteria list below to see what requirements are pending.'
+                                        }
+                                    </span>
+                                </div>
+                            </CAlert>
+                        )}
+
+                        {/* 4 Criteria Grid */}
                         <CRow className="g-3">
-                            {loans.map((loan) => (
-                                <CCol md={6} key={loan.id}>
-                                    <div className="rounded-4 p-3 border h-100 d-flex flex-column justify-content-between" style={{ background: '#f7fbff', borderColor: '#dcecff' }}>
-                                        <div>
-                                            <div className="d-flex justify-content-between align-items-start">
-                                                <div className="fw-bold text-primary mb-2">{loan.type}</div>
-                                                <StatusBadge status={loan.status} />
-                                            </div>
-                                            <div className="small text-secondary mb-1">Loan ID: {loan.id}</div>
-                                            <div className="fs-5 fw-bold mb-2 text-dark">{loan.balance}</div>
-                                            <div className="small mb-1"><strong>Due Date:</strong> {loan.dueDate}</div>
-                                            <div className="small mb-2"><strong>Interest Terms:</strong> {loan.interestRate}% annual ({loan.method})</div>
+                            {/* Membership Duration */}
+                            <CCol md={6} lg={3}>
+                                <CCard className="h-100 border-0 shadow-sm" style={{ background: '#f8fafc', borderLeft: `4px solid ${criteria.membershipDuration?.eligible ? '#2eb85c' : '#e55353'}` }}>
+                                    <CCardBody className="p-3">
+                                        <div className="d-flex justify-content-between align-items-start mb-2">
+                                            <span className="small text-secondary fw-bold">Membership Tenure</span>
+                                            <CBadge color={criteria.membershipDuration?.eligible ? 'success' : 'danger'}>
+                                                {criteria.membershipDuration?.eligible ? 'Pass' : 'Fail'}
+                                            </CBadge>
                                         </div>
-                                        <CButton
-                                            color="primary"
-                                            variant="outline"
-                                            size="sm"
-                                            className="mt-2 w-100"
-                                            onClick={() => openAmortizationForLoan(loan)}
-                                        >
-                                            <CIcon icon={cilCalculator} className="me-1" /> View Amortization Schedule
-                                        </CButton>
-                                    </div>
-                                </CCol>
-                            ))}
+                                        <p className="small text-dark mb-0 fw-semibold">
+                                            {criteria.membershipDuration?.message || 'Checking membership duration...'}
+                                        </p>
+                                    </CCardBody>
+                                </CCard>
+                            </CCol>
+
+                            {/* Share Amount */}
+                            <CCol md={6} lg={3}>
+                                <CCard className="h-100 border-0 shadow-sm" style={{ background: '#f8fafc', borderLeft: `4px solid ${criteria.minimumShareAmount?.eligible ? '#2eb85c' : '#e55353'}` }}>
+                                    <CCardBody className="p-3">
+                                        <div className="d-flex justify-content-between align-items-start mb-2">
+                                            <span className="small text-secondary fw-bold">Share Balance</span>
+                                            <CBadge color={criteria.minimumShareAmount?.eligible ? 'success' : 'danger'}>
+                                                {criteria.minimumShareAmount?.eligible ? 'Pass' : 'Fail'}
+                                            </CBadge>
+                                        </div>
+                                        <p className="small text-dark mb-0 fw-semibold">
+                                            {criteria.minimumShareAmount?.message || 'Checking share balance...'}
+                                        </p>
+                                    </CCardBody>
+                                </CCard>
+                            </CCol>
+
+                            {/* Consistent Savings */}
+                            <CCol md={6} lg={3}>
+                                <CCard className="h-100 border-0 shadow-sm" style={{ background: '#f8fafc', borderLeft: `4px solid ${criteria.consistentSavings?.eligible ? '#2eb85c' : '#e55353'}` }}>
+                                    <CCardBody className="p-3">
+                                        <div className="d-flex justify-content-between align-items-start mb-2">
+                                            <span className="small text-secondary fw-bold">Consistent Savings</span>
+                                            <CBadge color={criteria.consistentSavings?.eligible ? 'success' : 'danger'}>
+                                                {criteria.consistentSavings?.eligible ? 'Pass' : 'Fail'}
+                                            </CBadge>
+                                        </div>
+                                        <p className="small text-dark mb-0 fw-semibold">
+                                            {criteria.consistentSavings?.message || 'Checking savings patterns...'}
+                                        </p>
+                                    </CCardBody>
+                                </CCard>
+                            </CCol>
+
+                            {/* Active Loans */}
+                            <CCol md={6} lg={3}>
+                                <CCard className="h-100 border-0 shadow-sm" style={{ background: '#f8fafc', borderLeft: `4px solid ${criteria.activeLoans?.eligible ? '#2eb85c' : '#e55353'}` }}>
+                                    <CCardBody className="p-3">
+                                        <div className="d-flex justify-content-between align-items-start mb-2">
+                                            <span className="small text-secondary fw-bold">Active Loans</span>
+                                            <CBadge color={criteria.activeLoans?.eligible ? 'success' : 'danger'}>
+                                                {criteria.activeLoans?.eligible ? 'Pass' : 'Fail'}
+                                            </CBadge>
+                                        </div>
+                                        <p className="small text-dark mb-0 fw-semibold">
+                                            {criteria.activeLoans?.message || 'Checking active loans...'}
+                                        </p>
+                                    </CCardBody>
+                                </CCard>
+                            </CCol>
                         </CRow>
                     </CCardBody>
                 </CCard>
             </CCol>
 
-            <CCol lg={6}>
-                <CCard className="border-0 shadow-sm h-100">
-                    <CCardBody className="p-4">
-                        <div className="fw-bold text-primary mb-3">Upcoming Repayment Schedule</div>
-                        <CTable hover responsive align="middle" className="mb-0">
-                            <CTableHead>
-                                <CTableRow>
-                                    <CTableHeaderCell>Date</CTableHeaderCell>
-                                    <CTableHeaderCell>Amount</CTableHeaderCell>
-                                    <CTableHeaderCell>Status</CTableHeaderCell>
-                                </CTableRow>
-                            </CTableHead>
-                            <CTableBody>
-                                {repaymentSchedule.map((item) => (
-                                    <CTableRow key={`${item.date}-${item.amount}`}>
-                                        <CTableDataCell>{item.date}</CTableDataCell>
-                                        <CTableDataCell className="fw-semibold">{item.amount}</CTableDataCell>
-                                        <CTableDataCell>
-                                            <StatusBadge status={item.status} />
-                                        </CTableDataCell>
-                                    </CTableRow>
-                                ))}
-                            </CTableBody>
-                        </CTable>
-                    </CCardBody>
-                </CCard>
-            </CCol>
-
-            <CCol lg={6}>
-                <CCard className="border-0 shadow-sm h-100">
-                    <CCardBody className="p-4">
-                        <div className="fw-bold text-primary mb-3">Borrower Eligibility & Amortization Rules</div>
-                        <p className="text-secondary mb-3">
-                            Amortization schedules calculate monthly principal reduction and interest capitalization. Early repayments reduce cumulative interest costs under the Reducing Balance method.
-                        </p>
-                        <div className="rounded-4 p-3 border mb-3" style={{ background: '#f7fbff', borderColor: '#dcecff' }}>
-                            <div className="small text-secondary mb-1">Your Max Borrowing Capacity</div>
-                            <div className="fw-bold fs-4 text-success">ETB {maxEligibleLoan.toLocaleString()}</div>
-                            <div className="small text-muted">Based on your ETB {memberSavings.toLocaleString()} savings balance (4x multiplier)</div>
+            {/* SECTION 2: LOAN ACTIONS */}
+            <CCol xs={12}>
+                <CCard className="border-0 shadow-sm" style={{ background: '#f0f4f9' }}>
+                    <CCardBody className="p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <h5 className="fw-bold text-dark mb-1">Loan Management Actions</h5>
+                            <span className="small text-secondary">Apply for a new loan or preview amortization repayment schedules.</span>
+                        </div>
+                        <div className="d-flex gap-2">
+                            <CButton
+                                color="primary"
+                                variant="outline"
+                                size="lg"
+                                className="fw-bold"
+                                onClick={() => {
+                                    setAmortizationConfig({
+                                        principal: 100000,
+                                        interestRate: 12,
+                                        tenureMonths: 12,
+                                        method: 'Reducing Balance',
+                                        title: 'Interactive Repayment Amortization Calculator'
+                                    })
+                                    setShowAmortizationModal(true)
+                                }}
+                            >
+                                <CIcon icon={cilCalculator} className="me-2" /> Amortization Calculator
+                            </CButton>
+                            <CButton
+                                color="success"
+                                size="lg"
+                                className="text-white fw-bold"
+                                disabled={!overallEligible}
+                                onClick={() => setShowApplyModal(true)}
+                            >
+                                <CIcon icon={cilPlus} className="me-2" /> Apply For Loan
+                            </CButton>
                         </div>
                     </CCardBody>
                 </CCard>
             </CCol>
 
-            {/* MODAL 1: APPLY FOR LOAN WITH REAL-TIME VALIDATION */}
-            <CModal visible={showApplyModal} onClose={() => setShowApplyModal(false)} size="lg">
-                <CModalHeader className="bg-light">
-                    <CModalTitle className="fw-bold text-primary">SACCO Loan Application Form</CModalTitle>
-                </CModalHeader>
-                <CModalBody className="p-4">
-                    {/* Eligibility Rule Checks */}
-                    <div className="mb-4">
-                        <h6 className="fw-bold text-primary mb-2">X-SACCO Eligibility Check:</h6>
-                        <CRow className="g-3">
-                            <CCol md={6}>
-                                <div className={`p-3 rounded-3 border ${isTenureEligible ? 'bg-success bg-opacity-10 border-success' : 'bg-danger bg-opacity-10 border-danger'}`}>
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <div className="fw-bold">1. Membership Tenure (≥5 Mo)</div>
-                                        <CBadge color={isTenureEligible ? 'success' : 'danger'}>
-                                            {isTenureEligible ? 'PASSED' : 'FAILED'}
-                                        </CBadge>
-                                    </div>
-                                    <div className="small text-muted mt-1">
-                                        You have completed <strong>{memberTenureMonths} months</strong> of membership (Min: 5 months).
-                                    </div>
-                                </div>
-                            </CCol>
-                            <CCol md={6}>
-                                <div className={`p-3 rounded-3 border ${isSavingsEligible ? 'bg-success bg-opacity-10 border-success' : 'bg-danger bg-opacity-10 border-danger'}`}>
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <div className="fw-bold">2. 25% Savings Coverage</div>
-                                        <CBadge color={isSavingsEligible ? 'success' : 'danger'}>
-                                            {isSavingsEligible ? 'PASSED' : 'FAILED'}
-                                        </CBadge>
-                                    </div>
-                                    <div className="small text-muted mt-1">
-                                        Savings coverage: <strong>{savingsCoveragePct}%</strong> (Min required: 25.0%).
-                                    </div>
-                                </div>
-                            </CCol>
-                        </CRow>
-                    </div>
+            {/* SECTION 3: ACTIVE & APPLIED MEMBER LOANS */}
+            <CCol xs={12} lg={8}>
+                <CCard className="border-0 shadow-sm h-100">
+                    <CCardBody className="p-4">
+                        <div className="fw-bold text-primary fs-5 mb-3">Active & Applied Member Loans</div>
 
-                    {!isSavingsEligible && (
+                        {loansLoading && (
+                            <div className="text-center p-5">
+                                <CSpinner color="primary" className="mb-2" />
+                                <div className="text-muted small">Loading active and applied loans...</div>
+                            </div>
+                        )}
+
+                        {loansErrors?.isError && (
+                            <CAlert color="danger" className="border-0 shadow-sm mb-0">
+                                {loansErrors?.message || 'Failed to retrieve active loans.'}
+                            </CAlert>
+                        )}
+
+                        {!loansLoading && !loansErrors?.isError && memberLoans.length === 0 && (
+                            <div className="text-center p-5 border rounded-4 bg-light" style={{ borderStyle: 'dashed' }}>
+                                <CIcon icon={cilMoney} size="3xl" className="text-muted mb-3" />
+                                <h6 className="fw-bold text-secondary mb-1">No Loans Found</h6>
+                                <p className="small text-muted mb-0">You currently have no active or pending loan applications.</p>
+                            </div>
+                        )}
+
+                        {!loansLoading && !loansErrors?.isError && memberLoans.length > 0 && (
+                            <CRow className="g-3">
+                                {memberLoans.map((loan) => (
+                                    <CCol md={6} key={loan.id}>
+                                        <div className="rounded-4 p-3 border h-100 d-flex flex-column justify-content-between" style={{ background: '#f7fbff', borderColor: '#dcecff' }}>
+                                            <div>
+                                                <div className="d-flex justify-content-between align-items-start">
+                                                    <div className="fw-bold text-primary mb-2">{loan.package_name || 'General Loan'}</div>
+                                                    <StatusBadge status={loan.status} />
+                                                </div>
+                                                <div className="small text-secondary mb-1">Loan ID: LN-{loan.loan_number}</div>
+                                                <div className="fs-5 fw-bold mb-2 text-dark">
+                                                    ETB {Number(loan.outstanding_balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                                </div>
+                                                <div className="small mb-1">
+                                                    <strong>{loan.status === 'PENDING' ? 'Applied Principal: ' : 'Approved Principal: '}</strong> ETB {Number(loan.principal_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                                </div>
+                                                <div className="small mb-1">
+                                                    <strong>Interest Terms:</strong> {loan.interest_rate}% annual ({loan.interest_type || 'Reducing Balance'})
+                                                </div>
+                                                <div className="small mb-2">
+                                                    <strong>Repayment Term:</strong> {loan.term_months} Months ({loan.installment_period})
+                                                </div>
+                                                {loan.disbursed_at && (
+                                                    <div className="small mb-1 text-muted">
+                                                        <strong>Disbursed:</strong> {new Date(loan.disbursed_at).toLocaleDateString()}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <CButton
+                                                color="primary"
+                                                variant="outline"
+                                                size="sm"
+                                                className="mt-3 w-100 fw-semibold"
+                                                onClick={() => openAmortizationForLoan(loan)}
+                                            >
+                                                <CIcon icon={cilCalculator} className="me-1" /> View Amortization Schedule
+                                            </CButton>
+                                        </div>
+                                    </CCol>
+                                ))}
+                            </CRow>
+                        )}
+                    </CCardBody>
+                </CCard>
+            </CCol>
+
+            {/* Borrowing Capacity & Rules Info */}
+            <CCol xs={12} lg={4}>
+                <CCard className="border-0 shadow-sm h-100">
+                    <CCardBody className="p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div className="fw-bold text-primary fs-5 mb-3">Borrower Capacity & Rules</div>
+                            <p className="text-secondary small mb-3">
+                                Under SACCO policies, your maximum borrowing limit is determined by your total accumulated savings. You can borrow up to a maximum multiplier of <strong>4x</strong> of your savings collateral.
+                            </p>
+
+                            <div className="rounded-4 p-3 border mb-3" style={{ background: '#f8fafc', borderColor: '#e2e8f0' }}>
+                                <div className="small text-secondary mb-1">Your Active Savings Balance</div>
+                                <div className="fw-bold fs-5 text-dark">
+                                    ETB {memberSavings.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                </div>
+                            </div>
+
+                            <div className="rounded-4 p-3 border" style={{ background: '#ebfbee', borderColor: '#d3f9d8' }}>
+                                <div className="small text-success fw-bold mb-1">Maximum Borrowing Limit (4x)</div>
+                                <div className="fw-bold fs-4 text-success">
+                                    ETB {maxEligibleLoan.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                </div>
+                                <div className="small text-muted mt-1">Requires 25% minimum savings coverage.</div>
+                            </div>
+                        </div>
+
+                        <div className="small text-muted mt-4">
+                            ℹ️ <em>Early repayments reduce cumulative interest costs under the Reducing Balance method.</em>
+                        </div>
+                    </CCardBody>
+                </CCard>
+            </CCol>
+
+            {/* MODAL: APPLY FOR LOAN WITH REAL-TIME VALIDATION */}
+            <CModal visible={showApplyModal} onClose={() => setShowApplyModal(false)} size="lg" className="loan-apply-modal">
+                <style dangerouslySetInnerHTML={{ __html: loanModalStyles }} />
+                <CModalHeader className="loan-apply-modal-header">
+                    <CModalTitle className="loan-apply-modal-title d-flex align-items-center">
+                        <CIcon icon={cilPlus} className="me-2" size="lg" />
+                        SACCO Loan Application Form
+                    </CModalTitle>
+                </CModalHeader>
+                <CModalBody className="p-4 bg-light-subtle">
+                    {packagesLoading && (
+                        <div className="text-center py-4">
+                            <CSpinner color="primary" />
+                            <div className="text-muted small mt-2">Loading available loan packages...</div>
+                        </div>
+                    )}
+
+                    {packagesErrors?.isError && (
                         <CAlert color="danger" className="mb-4 border-0 shadow-sm fw-semibold">
-                            ⚠️ Requested loan of ETB {Number(requestedAmount).toLocaleString()} exceeds your maximum borrowing limit of ETB {maxEligibleLoan.toLocaleString()} (Requires at least 25% savings collateral). Please reduce the requested loan amount.
+                            ⚠️ {packagesErrors?.message || 'Failed to load available loan packages.'}
                         </CAlert>
                     )}
 
-                    <form onSubmit={handleApplyLoan}>
-                        <CRow className="g-3">
-                            <CCol md={6}>
-                                <label className="form-label fw-semibold">Select Loan Product</label>
-                                <CFormSelect value={loanType} onChange={(e) => setLoanType(e.target.value)}>
-                                    <option value="Normal Development Loan">Normal Development Loan (13.5% p.a. Reducing Balance)</option>
-                                    <option value="Emergency Support Loan">Emergency Support Loan (9.0% p.a. Flat Rate)</option>
-                                    <option value="SME Business Expansion Loan">SME Business Expansion Loan (14.5% p.a.)</option>
-                                </CFormSelect>
-                            </CCol>
+                    {!packagesLoading && !packagesErrors?.isError && (
+                        <>
+                            {applyErrors?.isError && (
+                                <CAlert color="danger" className="mb-4 border-0 shadow-sm fw-semibold">
+                                    ❌ {applyErrors?.message || 'Failed to submit loan request.'}
+                                </CAlert>
+                            )}
 
-                            <CCol md={6}>
-                                <label className="form-label fw-semibold">Requested Amount (ETB)</label>
-                                <CFormInput
-                                    type="number"
-                                    step="1000"
-                                    value={requestedAmount}
-                                    onChange={(e) => setRequestedAmount(Number(e.target.value))}
-                                    required
-                                />
-                                <small className="text-muted">Maximum eligible based on savings: ETB {maxEligibleLoan.toLocaleString()}</small>
-                            </CCol>
+                            <form onSubmit={handleApplyLoan}>
+                                <CRow className="g-3">
+                                    <CCol md={6}>
+                                        <label className="form-label small fw-semibold text-secondary">Select Loan Product</label>
+                                        <CFormSelect 
+                                            className="loan-select-premium" 
+                                            value={selectedPackageId} 
+                                            onChange={(e) => setSelectedPackageId(e.target.value)}
+                                        >
+                                            <option value="">-- Choose a Loan Package --</option>
+                                            {loanPackages.map(pkg => (
+                                                <option key={pkg.id} value={pkg.id}>
+                                                    {pkg.name} ({pkg.interest_rate_percentage}% p.a.)
+                                                </option>
+                                            ))}
+                                        </CFormSelect>
+                                    </CCol>
 
-                            <CCol md={6}>
-                                <label className="form-label fw-semibold">Repayment Tenure (Months)</label>
-                                <CFormSelect value={tenureMonths} onChange={(e) => setTenureMonths(Number(e.target.value))}>
-                                    <option value={6}>6 Months</option>
-                                    <option value={12}>12 Months</option>
-                                    <option value={24}>24 Months</option>
-                                    <option value={36}>36 Months</option>
-                                </CFormSelect>
-                            </CCol>
+                                    <CCol md={6}>
+                                        <label className="form-label small fw-semibold text-secondary">Requested Amount</label>
+                                        <div className="loan-input-group">
+                                            <span className="loan-addon">ETB</span>
+                                            <input
+                                                type="number"
+                                                step="1000"
+                                                value={requestedAmount}
+                                                onChange={(e) => setRequestedAmount(Number(e.target.value))}
+                                                required
+                                                min={1000}
+                                            />
+                                        </div>
+                                    </CCol>
 
-                            <CCol md={6}>
-                                <label className="form-label fw-semibold">Your Active Savings Balance</label>
-                                <CFormInput value={`ETB ${memberSavings.toLocaleString()}`} disabled readOnly />
-                            </CCol>
+                                    <CCol md={6}>
+                                        <label className="form-label small fw-semibold text-secondary">Repayment Tenure</label>
+                                        <div className="loan-input-group" style={{ backgroundColor: '#f1f5f9' }}>
+                                            <input 
+                                                value={selectedPackage ? `${selectedPackage.term_months} Months (${selectedPackage.installment_period})` : 'Select a package to see tenure'} 
+                                                disabled 
+                                                readOnly 
+                                            />
+                                        </div>
+                                    </CCol>
 
-                            <CCol md={12}>
-                                <div className="p-3 bg-light rounded-3 border mt-2">
-                                    <h6 className="fw-bold text-primary mb-2">📄 Guarantor Pledged Collateral & Official Work Verification Letter</h6>
-                                    <p className="small text-muted mb-3">
-                                        Attach the official employment / salary deduction guarantee letter from your guarantor's employer (signed and stamped by HR/Payroll).
-                                    </p>
-                                    <CRow className="g-3">
-                                        <CCol md={6}>
-                                            <label className="form-label small fw-semibold">Primary Guarantor Name</label>
-                                            <CFormSelect defaultValue="Alemayehu Worku">
-                                                <option value="Alemayehu Worku">Alemayehu Worku (Ethiopian Airlines - ETB 60,000 Pledged)</option>
-                                                <option value="Tizita Alemu">Tizita Alemu (Ethio Telecom - ETB 60,000 Pledged)</option>
-                                                <option value="Solomon Bekele">Solomon Bekele (CBE - ETB 50,000 Pledged)</option>
-                                            </CFormSelect>
-                                        </CCol>
-                                        <CCol md={6}>
-                                            <label className="form-label small fw-semibold">Upload Official Guarantor Work Letter (PDF / Scan)</label>
-                                            <input type="file" className="form-control" accept=".pdf,.jpg,.jpeg,.png" />
-                                            <small className="text-muted">Must include employer seal & monthly salary verification</small>
-                                        </CCol>
-                                    </CRow>
-                                </div>
-                            </CCol>
-                        </CRow>
-                    </form>
+                                    <CCol md={6}>
+                                        <label className="form-label small fw-semibold text-secondary">Interest Type</label>
+                                        <div className="loan-input-group" style={{ backgroundColor: '#f1f5f9' }}>
+                                            <input 
+                                                value={selectedPackage ? selectedPackage.interest_type : 'Select a package to see interest type'} 
+                                                disabled 
+                                                readOnly 
+                                            />
+                                        </div>
+                                    </CCol>
+                                </CRow>
+                            </form>
+                        </>
+                    )}
                 </CModalBody>
-                <CModalFooter>
-                    <CButton color="secondary" onClick={() => setShowApplyModal(false)}>Cancel</CButton>
+                <CModalFooter className="bg-light border-top-0 p-3">
+                    <CButton className="btn btn-secondary cancel-request-btn" onClick={() => setShowApplyModal(false)}>Cancel</CButton>
                     <CButton
-                        color="primary"
-                        variant="outline"
+                        className="preview-btn"
+                        disabled={!selectedPackage || requestedAmount <= 0}
                         onClick={() => {
+                            if (!selectedPackage) return
                             setAmortizationConfig({
                                 principal: requestedAmount,
-                                interestRate: 13.5,
-                                tenureMonths: tenureMonths,
-                                method: 'Reducing Balance',
-                                title: `Preview Amortization: ${loanType} (ETB ${requestedAmount.toLocaleString()})`
+                                interestRate: selectedPackage.interest_rate_percentage,
+                                tenureMonths: selectedPackage.term_months,
+                                method: selectedPackage.interest_type,
+                                title: `Preview Amortization: ${selectedPackage.name} (ETB ${requestedAmount.toLocaleString()})`
                             })
                             setShowAmortizationModal(true)
                         }}
@@ -412,17 +677,17 @@ const ManageMembersLoans = () => {
                         <CIcon icon={cilCalculator} className="me-1" /> Preview Amortization Table
                     </CButton>
                     <CButton
-                        color="success"
-                        className="text-white fw-bold"
-                        disabled={!isFormValid}
+                        className="submit-request-btn text-white fw-bold"
+                        disabled={!isFormValid || applyLoading || !selectedPackage}
                         onClick={handleApplyLoan}
                     >
-                        <CIcon icon={cilCheckCircle} className="me-1" /> Submit Loan Request
+                        {applyLoading ? <CSpinner size="sm" color="light" className="me-1" /> : <CIcon icon={cilCheckCircle} className="me-1" />}
+                        Submit Loan Request
                     </CButton>
                 </CModalFooter>
             </CModal>
 
-            {/* MODAL 2: REUSABLE AMORTIZATION SCHEDULE MODAL */}
+            {/* REUSABLE AMORTIZATION SCHEDULE MODAL */}
             <AmortizationScheduleModal
                 visible={showAmortizationModal}
                 onClose={() => setShowAmortizationModal(false)}
