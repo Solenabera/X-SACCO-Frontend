@@ -227,14 +227,3 @@ body {
   border: 1px solid rgba(15, 76, 129, 0.08);
   box-shadow: var(--sacco-shadow);
 }
-
-@include color-mode(dark) {
-  body {
-    background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
-    color: #f8fafc;
-  }
-
-  .footer {
-    --cui-footer-bg: var(--cui-body-bg);
-  }
-}

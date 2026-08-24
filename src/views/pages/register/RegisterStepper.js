@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Step1_PhoneNumber from './Step1_PhoneNumber'
 import Step2_UserPersonalInfo from './Step2_UserPersonalInfo'
 import Step3_UserAddress from './Step3_UserAddress'
-import Step4_UploadFayda from './Step4_UploadFayda'
+import Step4_UploadFaydaAndPersonalPhoto from './Step4_UploadFaydaAndPersonalPhoto'
 import Step5_ThankYou from './Step5_ThankYou'
 
 import { CCard, CCardBody, CCol, CContainer, CProgress, CRow } from '@coreui/react'
@@ -98,7 +98,7 @@ const RegisterStepper = () => {
                                     )}
 
                                     {step === 4 && (
-                                        <Step4_UploadFayda
+                                        <Step4_UploadFaydaAndPersonalPhoto
                                             phoneNumber={phoneNumber}
                                             personalInfo={personalInfo}
                                             userAddress={userAddress}

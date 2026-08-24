@@ -8,6 +8,7 @@ import {
     CFormSelect,
     CInputGroup,
     CInputGroupText,
+    CFormLabel,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilLockUnlocked, cilCheckCircle, cilXCircle } from '@coreui/icons'
@@ -180,11 +181,13 @@ const Step2_UserPersonalInfo = ({ personalInfo = {}, onBack, onSuccess }) => {
 
             <CRow>
                 <CCol md={6} className='mb-3'>
+                    <CFormLabel className='ms-2'>Birth Date</CFormLabel>
                     <CFormInput type="date" placeholder="Birth Date" {...register('birthDate')} />
                     {errors.birthDate && <small className='text-danger'>{errors.birthDate.message}</small>}
                 </CCol>
 
                 <CCol md={6} className='mb-3'>
+                    <CFormLabel className='ms-2'>Gender</CFormLabel>
                     <CFormSelect {...register('gender')}>
                         <option value="">-- Select Gender --</option>
                         <option value="Male">Male</option>
